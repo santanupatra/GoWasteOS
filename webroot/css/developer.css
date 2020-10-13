@@ -1,0 +1,19 @@
+.add-tag-top{
+	margin-bottom: 15px;
+}
+.status-image{
+	height: 30px;
+}
+.edit-tag-icon{
+	padding-right:2px;
+}
+.error-message{
+	color: #a94442;
+}
+.show-image{
+	height: 80px; 
+	width: 80px;
+}
+.select2-location{
+	width: 100%
+}
