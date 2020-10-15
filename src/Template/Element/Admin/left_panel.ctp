@@ -27,8 +27,8 @@
                             <a href="#user" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users" aria-hidden="true"></i> <span>Manage All User</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
                             <div id="user" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Products", "action"=>"add"]); ?>" class="">Service Provider</a></li>
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Products", "action"=>"index"]); ?>" class="">Customer</a></li>
+                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"service_provider_list"]); ?>" class="">Service Provider</a></li>
+                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"customer_list"]); ?>" class="">Customer</a></li>
                                 </ul>
                             </div>
                         </li>

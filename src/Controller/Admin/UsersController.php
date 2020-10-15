@@ -157,13 +157,6 @@ class UsersController extends AppController {
         return $this->redirect("/admin");
     }
 
-    public function contactList() {
-        $this->viewBuilder()->layout('admin');
-        $this->loadModel('ContactUs');
-        $results = $this->ContactUs->find()->where(['isActive' => 1])->order(['id'=>'DESC']);
-        $this->set(compact('results'));
-    }
-
     /**
      * forgotPassword method
      *
@@ -233,5 +226,146 @@ class UsersController extends AppController {
                 return $this->redirect('/admin');
             }
         }
+    }
+
+    public function customer_list() {
+        $this->viewBuilder()->layout('admin');
+
+        $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->order(['id'=>'desc']);
+        $customers = $this->paginate($customers)->toArray();
+
+        $this->set(compact('customers'));
+    }
+
+    public function service_provider_list() {
+        $this->viewBuilder()->layout('admin');
+
+        $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->order(['id'=>'desc']);
+        $service_providers = $this->paginate($service_providers)->toArray();
+
+        $this->set(compact('service_providers'));
+    }
+
+    public function add_customer() {
+        $this->viewBuilder()->layout('admin');
+        
+        if ($this->request->is('post')) {
+             
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            if(empty($duplicate)){
+                $name=trim($this->request->data['name']);
+                if (strpos($name, ' ') !== false) {
+                    $this->request->data['firstName']=explode(' ', $name)[0];
+                    $this->request->data['lastName']=explode(' ', $name)[1];
+                }else{
+                    $this->request->data['firstName']=$name;
+                }
+                if($this->request->data['profilePicture']['name'] != '') {
+                    $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                    $arr_ext = array('jpg', 'jpeg', 'png');
+                    $ext = $pathpart['extension'];
+                    if (in_array($ext, $arr_ext)) {
+                        $uploadFolder = "userImg";
+                        $uploadPath = WWW_ROOT . $uploadFolder;
+                        $filename = uniqid().".".$ext;
+                        $full_flg_path = $uploadPath . '/' . $filename;
+                        move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                        $this->request->data['profilePicture'] = "userImg/".$filename;
+                    } else {
+                        $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                        return $this->redirect(['action'=>'add_customer']);
+                    } 
+                }
+                $customer = $this->Users->newEntity();
+                $customer = $this->Users->patchEntity($customer, $this->request->data);
+                if ($this->Users->save($customer)) {
+                    $this->Flash->success(__('Customer has been added successfully.'));
+                    return $this->redirect(['action'=>'customer_list']);
+                } else {
+                    $this->Flash->error(__('Customer could not added. Please, try again.'));
+                }
+            }else{
+                $this->Flash->success(__('Email already in use please use another.'));
+                return $this->redirect(['action'=>'add_customer']);
+            }
+        }
+    }
+
+    public function add_service_provider() {
+        $this->viewBuilder()->layout('admin');
+        $service_provider = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+             
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            if(empty($duplicate)){
+                $name=trim($this->request->data['name']);
+                if (strpos($name, ' ') !== false) {
+                    $this->request->data['firstName']=explode(' ', $name)[0];
+                    $this->request->data['lastName']=explode(' ', $name)[1];
+                }else{
+                    $this->request->data['firstName']=$name;
+                }
+                if($this->request->data['profilePicture']['name'] != '') {
+                    $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                    $arr_ext = array('jpg', 'jpeg', 'png');
+                    $ext = $pathpart['extension'];
+                    if (in_array($ext, $arr_ext)) {
+                        $uploadFolder = "userImg";
+                        $uploadPath = WWW_ROOT . $uploadFolder;
+                        $filename = uniqid().".".$ext;
+                        $full_flg_path = $uploadPath . '/' . $filename;
+                        move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                        $this->request->data['profilePicture'] = "userImg/".$filename;
+                    } else {
+                        $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                        return $this->redirect(['action'=>'add_service_provider']);
+                    } 
+                }
+                //pr($this->request->data); exit();
+                $service_provider = $this->Users->patchEntity($service_provider, $this->request->data);
+                if($this->Users->save($service_provider)){
+                    $this->Flash->success(__('Service Provider has been added successfully.'));
+                    return $this->redirect(['action'=>'service_provider_list']);
+                }else{
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'add_service_provider']);
+                }
+            }else{
+                $this->Flash->success(__('Email already in use please use another.'));
+                return $this->redirect(['action'=>'add_customer']);
+            }
+        }
+    }
+
+    public function delete($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        $status=array();
+        $status['isDeleted']=1;
+        $user = $this->Users->patchEntity($user, $status);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('Deleted successfully.'));
+            return $this->redirect( Router::url( $this->referer(), true ) );
+        } else {
+            $this->Flash->error(__('Can not be deleted. Please, try again.'));
+        }
+        return $this->redirect( Router::url( $this->referer(), true ) );
+    }
+
+    public function status($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        $status=array();
+        $status['isActive']=$user['isActive']==1?0:1;
+        $user = $this->Users->patchEntity($user, $status);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('Status has been changed successfully.'));
+            return $this->redirect( Router::url( $this->referer(), true ) );
+        } else {
+            $this->Flash->error(__('Status can not be change. Please, try again.'));
+        }
+        return $this->redirect( Router::url( $this->referer(), true ) );
     }
 }

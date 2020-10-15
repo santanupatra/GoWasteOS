@@ -64,17 +64,10 @@
         var phone = $(".phone").val();
         var email = $(".email-text").val();
         if(fName == "") {
-            $(".fNameError").text("First name can not be empty!"); 
+            $(".fNameError").text("Name can not be empty!"); 
             $(".fNameError").css('display','block');
             setTimeout(function(){ 
                 $(".fNameError").fadeOut();
-            },1500);
-            return false;
-        } else if (phone == "") {
-            $(".phoneError").text("Mobile number can not be empty!"); 
-            $(".phoneError").css('display','block');
-            setTimeout(function(){ 
-                $(".phoneError").fadeOut();
             },1500);
             return false;
         } else if (email == "") {

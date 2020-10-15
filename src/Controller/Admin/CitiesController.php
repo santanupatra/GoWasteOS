@@ -50,14 +50,20 @@ class CitiesController extends AppController {
         
         $city = $this->Cities->newEntity();
         if ($this->request->is('post')) {
-        	// print_r($this->request->data); exit;
-        	$city = $this->Cities->patchEntity($city, $this->request->data);
-        	if ($this->Cities->save($city)) {
-        		$this->Flash->success(__('City has been added successfully.'));
-                return $this->redirect(['action'=>'index']);
-        	} else {
-        		$this->Flash->error(__('City could not added. Please, try again.'));
-        	}
+        	$duplicate = $this->Cities->find()->where(['name'=>trim($this->request->data['name']), 'is_active'=>1])->first();
+            if(empty($duplicate)){
+                $this->request->data['name']=trim($this->request->data['name']);
+                $city = $this->Cities->patchEntity($city, $this->request->data);
+                if ($this->Cities->save($city)) {
+                    $this->Flash->success(__('City has been added successfully.'));
+                    return $this->redirect(['action'=>'index']);
+                } else {
+                    $this->Flash->error(__('City could not added. Please, try again.'));
+                }
+            }else{
+                $this->Flash->success(__('City name already added, please use another.'));
+                return $this->redirect(['action'=>'add']);
+            }
         }
     }
 
