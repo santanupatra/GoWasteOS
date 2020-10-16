@@ -321,7 +321,13 @@ class UsersController extends AppController {
                         return $this->redirect(['action'=>'add_service_provider']);
                     } 
                 }
-                //pr($this->request->data); exit();
+                // $this->request->data['user_type'] = 'SP';
+                // // pr($this->request->data); 
+                //  $service_provider = $this->Users->patchEntity($service_provider, array('firstName' => 'Melon', 'lastName' => 'Head','utype'=>'A','email'=>'testtt@gmail.com','created_date'=>'2020-10-16 06:47:14'));
+                // // pr($service_provider);
+                // $this->Users->save($service_provider);
+                // // $this->Users->save($service_provider);
+                // exit();
                 $service_provider = $this->Users->patchEntity($service_provider, $this->request->data);
                 if($this->Users->save($service_provider)){
                     $this->Flash->success(__('Service Provider has been added successfully.'));
@@ -332,7 +338,7 @@ class UsersController extends AppController {
                 }
             }else{
                 $this->Flash->success(__('Email already in use please use another.'));
-                return $this->redirect(['action'=>'add_customer']);
+                return $this->redirect(['action'=>'add_service_provider']);
             }
         }
     }
@@ -367,5 +373,17 @@ class UsersController extends AppController {
             $this->Flash->error(__('Status can not be change. Please, try again.'));
         }
         return $this->redirect( Router::url( $this->referer(), true ) );
+    }
+
+    public function customer_view($id = null){
+        $id = base64_decode($id);
+        $customer = $this->Users->get($id);
+        $this->set(compact('customer'));
+    }
+
+    public function service_provider_view($id = null){
+        $id = base64_decode($id);
+        $service_provider = $this->Users->get($id);
+        $this->set(compact('service_provider'));
     }
 }

@@ -40,7 +40,8 @@
                                                     <label for="image-upload" class="control-label">Image</label>
                                                     <?php echo $this->Form->input('profilePicture',['type' => 'file','label'=>false,'id'=>'image-upload']); ?>
                                                 </div>
-                                                <?php echo $this->Form->input('type',['type'=>'hidden', 'label'=>false,'value'=>'SP']); ?>
+                                                <?php echo $this->Form->input('utype',['type'=>'text', 'label'=>false]); ?>
+                                                <?php echo $this->Form->input('type',['type'=>'hidden', 'label'=>false, 'value'=>'SP']); ?>
                                                 <div class="form-group">
                                                     
                                                     <img src="<?php echo $this->Url->build('/img/no-image.jpg'); ?>" id="user-image" alt="User Image" class="show-image">
