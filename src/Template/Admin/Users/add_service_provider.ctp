@@ -26,7 +26,7 @@
 
                                                 <div class="form-group">
                                                     <label for="first-name" class="control-label">Phone</label>
-                                                    <?php echo $this->Form->input('phoneNumber',['class' => 'form-control character-text phone', 'label'=>false,'id' => 'phone','placeholder'=>'Phone']); ?>
+                                                    <input type="text" class="form-control" name="phoneNumber" id="phone" placeholder="Phone" >
                                                     <p class="phoneError error-message"></p>
                                                 </div>
                                                 
@@ -35,13 +35,28 @@
                                                     <?php echo $this->Form->input('email',['class' => 'form-control email-text','label'=>false,'id' => 'email','placeholder'=>'Email']); ?>
                                                     <p class="emailError error-message"></p>
                                                 </div>
+
+                                                <?php echo $this->Form->input('type',['type'=>'hidden','class' => 'form-control email-text','label'=>false, 'value'=>'SP']); ?>
+
+                                                <!-- <div class="form-group">
+                                                    <label for="email" class="control-label">Address</label>
+                                                    <?php echo $this->Form->input('address',['class' => 'form-control email-text','label'=>false,'id' => 'address','placeholder'=>'Address']); ?>
+                                                    <p class="emailError error-message"></p>
+                                                </div> -->
+
+                                                <!-- <div class="form-group">
+                                                    <label for="email" class="control-label">Type</label>
+                                                    <select name="type" class="form-control">
+                                                        <option value="SP">Service Provider</option>
+                                                    </select>
+                                                    <p class="emailError error-message"></p>
+                                                </div> -->
                                                 
                                                 <div class="form-group">
                                                     <label for="image-upload" class="control-label">Image</label>
                                                     <?php echo $this->Form->input('profilePicture',['type' => 'file','label'=>false,'id'=>'image-upload']); ?>
                                                 </div>
-                                                <?php echo $this->Form->input('utype',['type'=>'text', 'label'=>false]); ?>
-                                                <?php echo $this->Form->input('type',['type'=>'hidden', 'label'=>false, 'value'=>'SP']); ?>
+                                                
                                                 <div class="form-group">
                                                     
                                                     <img src="<?php echo $this->Url->build('/img/no-image.jpg'); ?>" id="user-image" alt="User Image" class="show-image">
@@ -66,6 +81,7 @@
     function validateForm() {
         var fName = $(".fName").val();
         var phone = $(".phone").val();
+        //var address = $(".address").val();
         var email = $(".email-text").val();
         if(fName == "") {
             $(".fNameError").text("Name can not be empty!"); 

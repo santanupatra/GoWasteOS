@@ -34,11 +34,10 @@
                         </li>
 
                         <li>
-                            <a href="#pricing" data-toggle="collapse" class="collapsed"><i class="lnr lnr-pushpin" aria-hidden="true"></i> <span>Manage Pricing</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                            <a href="#pricing" data-toggle="collapse" class="collapsed"><i class="lnr lnr-pushpin" aria-hidden="true"></i> <span>Manage Service</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
                             <div id="pricing" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"add"]); ?>" class="">Add Pricing</a></li>
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Pricing List</a></li>
+                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Service List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -47,27 +46,15 @@
                             <a href="#booking" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cart" aria-hidden="true"></i> <span>Manage Booking</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
                             <div id="booking" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"add"]); ?>" class="">Add Booking</a></li>
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Booking List</a></li>
+                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"index"]); ?>" class="">Booking List</a></li>
                                 </ul>
                             </div>
                         </li>
 
-                        <li>
-                            <a href="#service" data-toggle="collapse" class="collapsed"><i class="lnr lnr-list" aria-hidden="true"></i> <span>Manage Service </span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
-                            <div id="service" class="collapse ">
-                                <ul class="nav">
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"add"]); ?>" class="">Add Service</a></li>
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Service List</a></li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li>
+ <!--                        <li>
                             <a href="#rating" data-toggle="collapse" class="collapsed"><i class="lnr lnr-star" aria-hidden="true"></i> <span>Manage Rating </span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
                             <div id="rating" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"add"]); ?>" class="">Add Rating</a></li>
                                     <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Rating List</a></li>
                                 </ul>
                             </div>
@@ -81,7 +68,7 @@
                                     <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Messages List</a></li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> 
 
                         <li>
                             <a href="#account" data-toggle="collapse" class="collapsed"><i class="lnr lnr-database" aria-hidden="true"></i> <span>Manage Financial Account </span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
@@ -111,7 +98,7 @@
                                     <li><a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="">Analytics List</a></li>
                                 </ul>
                             </div>
-                        </li>
+                        </li>-->
 
                     </ul>
                 </nav>

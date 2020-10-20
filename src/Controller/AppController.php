@@ -111,15 +111,12 @@ class AppController extends Controller {
      */
     public function beforeRender(Event $event) {
         $this->loadModel('Users');
-        $this->loadModel('Banners');
         $this->loadModel('Settings');
-        $this->loadModel('Projects');
         $cartCount='';
         if (isset($this->request->params['prefix']) && $this->request->params['prefix'] == 'admin') {
             if ($this->request->session()->check('Auth.Admin')) {
                 $adminuserId = $this->request->session()->read('Auth.Admin.id');
                 $admin_details = $this->Users->find()->where(['Users.id' => $adminuserId])->first()->toArray();
-                // pr($admin_details); exit;
                 $this->set(compact('adminuserId','admin_details'));
             }
         } else {
@@ -131,9 +128,7 @@ class AppController extends Controller {
         }
         $id=1;
         $setting = $this->Settings->get($id);
-        $disclaimer = $this->Banners->get(5);
-        $footer = $this->Banners->get(6);
-        $this->set(compact('setting','disclaimer','footer'));
+        $this->set(compact('setting'));
     }
 
     /**

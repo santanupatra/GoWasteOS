@@ -6,7 +6,7 @@
                     <!-- TABLE HOVER -->
                     <div class="panel widget">
                         <div class="panel-heading widget-title">
-                            <h3 class="panel-title">Edit Admin Profile</h3>
+                            <h3 class="panel-title">Edit Service Provider Profile</h3>
                             <div class="right">
                                 <button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
                             </div>
@@ -23,6 +23,11 @@
                                                     <?php echo $this->Form->input('name',['class' => 'form-control character-text fName','value'=>$user['firstName'].' '.$user['lastName'], 'label'=>false,'id' => 'first-name','placeholder'=>'Name']); ?>
                                                     <p class="fNameError error-message"></p>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="first-name" class="control-label">Phone</label>
+                                                    <?php echo $this->Form->input('phoneNumber',['class' => 'form-control character-text phone','value'=>$user['phoneNumber'], 'label'=>false,'id' => 'phone','placeholder'=>'Phone']); ?>
+                                                    <p class="phoneError error-message"></p>
+                                                </div>
                                                 
                                                 <div class="form-group">
                                                     <label for="email" class="control-label">Email</label>
@@ -34,7 +39,7 @@
                                                     <label for="image-upload" class="control-label">Image</label>
                                                     <?php echo $this->Form->input('profilePicture',['type' => 'file','label'=>false,'id'=>'image-upload']); ?>
                                                 </div>
-                                                <input type="hidden" name="oldimg" value="<?php echo $user['userImage']; ?>">
+                                                <input type="hidden" name="oldimg" value="<?php echo $user['profilePicture']; ?>">
                                                 <div class="form-group">
                                                     <?php if ($user['profilePicture'] != '') { ?>
                                                     <img src="<?php echo $this->Url->build('/'.$user->profilePicture); ?>" id="user-image" alt="User Image" class="show-image">
@@ -68,6 +73,13 @@
             $(".fNameError").css('display','block');
             setTimeout(function(){ 
                 $(".fNameError").fadeOut();
+            },1500);
+            return false;
+        } else if (phone == "") {
+            $(".phoneError").text("Phone can not be empty!"); 
+            $(".phoneError").css('display','block');
+            setTimeout(function(){ 
+                $(".phoneError").fadeOut();
             },1500);
             return false;
         } else if (email == "") {

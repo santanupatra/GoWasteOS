@@ -20,6 +20,11 @@
                                                     <p class="pNameError error-message"></p>
                                                 </div>
                                                 <div class="form-group">
+                                                    <label for="page-name" class="control-label">Price</label>
+                                                    <?php echo $this->Form->input('price',['class' => 'form-control priceName','label'=>false,'placeholder'=>'Price','id' => 'priceName']); ?>
+                                                    <p class="priceNameError error-message"></p>
+                                                </div>
+                                                <div class="form-group">
                                                     <label for="page-name" class="control-label">Icon</label>
                                                     <?php echo $this->Form->input('image',['class' => 'form-control', 'type' => 'file', 'label'=>false]); ?>
                                             
@@ -51,16 +56,23 @@
 
     function validateForm () {
         var pName = $('.pName').val();
-        // var description = CKEDITOR.instances["description"].getData();
+        var price = $('.priceName').val();
         var description = $("#description").val();
         if (pName == "") {
-            $(".pNameError").text("Page name can not be empty!"); 
+            $(".pNameError").text("Service title can not be empty!"); 
             $(".pNameError").css('display','block');
             setTimeout(function(){ 
                 $(".pNameError").fadeOut();
             },1500);
             return false;
-        } else if(description == ''){
+        } else if(price == ''){
+            $(".priceNameError").text("price can not be empty!"); 
+            $(".priceNameError").css('display','block');
+            setTimeout(function(){ 
+                $(".priceNameError").fadeOut();
+            },1500);
+            return false;
+        }else if(description == ''){
             $(".descriptionError").text("Description can not be empty!"); 
             $(".descriptionError").css('display','block');
             setTimeout(function(){ 

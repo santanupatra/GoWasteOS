@@ -2,7 +2,6 @@
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="brand">
                 <a href="<?php echo $this->Url->build('/admin/users/dashboard'); ?>">
-                GoWasteOS
                 <!-- <img src="<?php echo $this->Url->build('/'.$setting['logo']); ?>" alt="Logo" class="img-responsive logo"> -->
                 </a>
             </div>

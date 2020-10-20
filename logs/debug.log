@@ -10967,3 +10967,131 @@ Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
 
 
 
+2020-10-19 12:13:44 Notice: Notice (1024): Undefined property: UsersController::$Banners in /var/www/html/GoWasteOS/src/Controller/AppController.php on line 132 in [/var/www/html/GoWasteOS/vendor/cakephp/cakephp/src/Controller/Controller.php, line 387]
+Request URL: /admin
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 168
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 43
+Cake\Controller\Controller::__get() - CORE/src/Controller/Controller.php, line 387
+App\Controller\AppController::beforeRender() - APP/Controller/AppController.php, line 132
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 352
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 329
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 113
+Cake\Controller\Controller::render() - CORE/src/Controller/Controller.php, line 782
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 126
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 234
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 164
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 96
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
+[main] - ROOT/webroot/index.php, line 40
+
+
+
+2020-10-19 12:13:44 Notice: Notice (1024): Undefined property: ErrorController::$Banners in /var/www/html/GoWasteOS/src/Controller/AppController.php on line 132 in [/var/www/html/GoWasteOS/vendor/cakephp/cakephp/src/Controller/Controller.php, line 387]
+Request URL: /admin
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 168
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 43
+Cake\Controller\Controller::__get() - CORE/src/Controller/Controller.php, line 387
+App\Controller\AppController::beforeRender() - APP/Controller/AppController.php, line 132
+App\Controller\ErrorController::beforeRender() - APP/Controller/ErrorController.php, line 56
+Cake\Event\EventManager::_callListener() - CORE/src/Event/EventManager.php, line 352
+Cake\Event\EventManager::dispatch() - CORE/src/Event/EventManager.php, line 329
+Cake\Controller\Controller::dispatchEvent() - CORE/src/Event/EventDispatcherTrait.php, line 113
+Cake\Controller\Controller::render() - CORE/src/Controller/Controller.php, line 782
+Cake\Error\ExceptionRenderer::_outputMessage() - CORE/src/Error/ExceptionRenderer.php, line 369
+Cake\Error\ExceptionRenderer::render() - CORE/src/Error/ExceptionRenderer.php, line 243
+Cake\Error\Middleware\ErrorHandlerMiddleware::handleException() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 116
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 98
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
+[main] - ROOT/webroot/index.php, line 40
+
+
+
+2020-10-19 12:40:51 Notice: Notice (8): Undefined variable: services in [/var/www/html/GoWasteOS/src/Template/Admin/Bookings/index.ctp, line 28]
+Request URL: /admin/bookings
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 168
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 43
+include - APP/Template/Admin/Bookings/index.ctp, line 28
+Cake\View\View::_evaluate() - CORE/src/View/View.php, line 1420
+Cake\View\View::_render() - CORE/src/View/View.php, line 1381
+Cake\View\View::render() - CORE/src/View/View.php, line 879
+Cake\Controller\Controller::render() - CORE/src/Controller/Controller.php, line 795
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 126
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 234
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 164
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 96
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
+[main] - ROOT/webroot/index.php, line 40
+
+
+
+2020-10-19 12:55:45 Notice: Notice (8): Undefined variable: services in [/var/www/html/GoWasteOS/src/Template/Admin/Bookings/index.ctp, line 28]
+Request URL: /admin/bookings
+Referer URL: http://localhost/GoWasteOS/admin/settings
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 168
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 43
+include - APP/Template/Admin/Bookings/index.ctp, line 28
+Cake\View\View::_evaluate() - CORE/src/View/View.php, line 1420
+Cake\View\View::_render() - CORE/src/View/View.php, line 1381
+Cake\View\View::render() - CORE/src/View/View.php, line 879
+Cake\Controller\Controller::render() - CORE/src/Controller/Controller.php, line 795
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 126
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 234
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 164
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 96
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
+[main] - ROOT/webroot/index.php, line 40
+
+
+
+2020-10-20 06:16:55 Notice: Notice (1024): Undefined property: BookingsController::$Services in /var/www/html/GoWasteOS/src/Controller/Admin/BookingsController.php on line 49 in [/var/www/html/GoWasteOS/vendor/cakephp/cakephp/src/Controller/Controller.php, line 387]
+Request URL: /admin/bookings/add
+Referer URL: http://localhost/GoWasteOS/admin/bookings/add
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 168
+Cake\Core\BasePlugin::{closure}() - ROOT/vendor/cakephp/debug_kit/config/bootstrap.php, line 43
+Cake\Controller\Controller::__get() - CORE/src/Controller/Controller.php, line 387
+App\Controller\Admin\BookingsController::add() - APP/Controller/Admin/BookingsController.php, line 49
+Cake\Controller\Controller::invokeAction() - CORE/src/Controller/Controller.php, line 609
+Cake\Http\ActionDispatcher::_invoke() - CORE/src/Http/ActionDispatcher.php, line 120
+Cake\Http\ActionDispatcher::dispatch() - CORE/src/Http/ActionDispatcher.php, line 94
+Cake\Http\BaseApplication::__invoke() - CORE/src/Http/BaseApplication.php, line 234
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\RoutingMiddleware::__invoke() - CORE/src/Routing/Middleware/RoutingMiddleware.php, line 164
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Routing\Middleware\AssetMiddleware::__invoke() - CORE/src/Routing/Middleware/AssetMiddleware.php, line 88
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Error\Middleware\ErrorHandlerMiddleware::__invoke() - CORE/src/Error/Middleware/ErrorHandlerMiddleware.php, line 96
+Cake\Http\Runner::__invoke() - CORE/src/Http/Runner.php, line 65
+Cake\Http\Runner::run() - CORE/src/Http/Runner.php, line 51
+Cake\Http\Server::run() - CORE/src/Http/Server.php, line 97
+[main] - ROOT/webroot/index.php, line 40
+
+
+

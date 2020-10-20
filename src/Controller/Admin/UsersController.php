@@ -321,13 +321,7 @@ class UsersController extends AppController {
                         return $this->redirect(['action'=>'add_service_provider']);
                     } 
                 }
-                // $this->request->data['user_type'] = 'SP';
-                // // pr($this->request->data); 
-                //  $service_provider = $this->Users->patchEntity($service_provider, array('firstName' => 'Melon', 'lastName' => 'Head','utype'=>'A','email'=>'testtt@gmail.com','created_date'=>'2020-10-16 06:47:14'));
-                // // pr($service_provider);
-                // $this->Users->save($service_provider);
-                // // $this->Users->save($service_provider);
-                // exit();
+                
                 $service_provider = $this->Users->patchEntity($service_provider, $this->request->data);
                 if($this->Users->save($service_provider)){
                     $this->Flash->success(__('Service Provider has been added successfully.'));
@@ -385,5 +379,89 @@ class UsersController extends AppController {
         $id = base64_decode($id);
         $service_provider = $this->Users->get($id);
         $this->set(compact('service_provider'));
+    }
+
+    public function edit_customer($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'myaccount']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Customer has been updated Successfully.'));
+                return $this->redirect(['action' => 'customer_list']);
+            }
+        }
+        $this->set(compact('user'));
+    }
+
+    public function edit_service_provider($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'myaccount']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Service Provider has been updated Successfully.'));
+                return $this->redirect(['action' => 'service_provider_list']);
+            }
+        }
+        $this->set(compact('user'));
     }
 }

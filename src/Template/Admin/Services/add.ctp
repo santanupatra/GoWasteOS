@@ -5,7 +5,7 @@
 							<!-- TABLE HOVER -->
 							<div class="panel widget">
 								<div class="panel-heading widget-title">
-									<h3 class="panel-title">Add Service Page</h3>
+									<h3 class="panel-title">Add Service</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
@@ -18,6 +18,11 @@
                                                     <label for="page-name" class="control-label">Title</label>
                                                     <?php echo $this->Form->input('title',['class' => 'form-control pName','label'=>false,'id' => 'page-name','placeholder'=>'Title']); ?>
                                                     <p class="pNameError error-message"></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="page-name" class="control-label">Price</label>
+                                                    <?php echo $this->Form->input('price',['type'=>'number','class' => 'form-control priceName','label'=>false,'placeholder'=>'Price','id' => 'priceName']); ?>
+                                                    <p class="priceNameError error-message"></p>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="page-name" class="control-label">Icon</label>
@@ -50,16 +55,23 @@
 
     function validateForm () {
         var pName = $('.pName').val();
-    	// var description = CKEDITOR.instances["description"].getData();
+    	var price = $('.priceName').val();
     	var description = $("#description").val();
     	if (pName == "") {
-            $(".pNameError").text("Page name can not be empty!"); 
+            $(".pNameError").text("Service title can not be empty!"); 
             $(".pNameError").css('display','block');
             setTimeout(function(){ 
                 $(".pNameError").fadeOut();
             },1500);
             return false;
-        } else if(description == ''){
+        }  else if(price == ''){
+            $(".priceNameError").text("price can not be empty!"); 
+            $(".priceNameError").css('display','block');
+            setTimeout(function(){ 
+                $(".priceNameError").fadeOut();
+            },1500);
+            return false;
+        }else if(description == ''){
     		$(".descriptionError").text("Description can not be empty!"); 
 		    $(".descriptionError").css('display','block');
 		    setTimeout(function(){ 
