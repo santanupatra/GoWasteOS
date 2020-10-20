@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2020 at 06:28 PM
+-- Generation Time: Oct 20, 2020 at 07:35 PM
 -- Server version: 5.7.31-0ubuntu0.18.04.1
 -- PHP Version: 7.1.33-19+ubuntu18.04.1+deb.sury.org+1
 
@@ -71,6 +71,33 @@ CREATE TABLE `cities` (
 
 INSERT INTO `cities` (`id`, `name`, `is_active`, `created_date`) VALUES
 (2, 'kolkata', 1, '2020-10-14 18:16:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leftmenu_list`
+--
+
+CREATE TABLE `leftmenu_list` (
+  `id` int(11) NOT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `leftmenu_list`
+--
+
+INSERT INTO `leftmenu_list` (`id`, `name`, `status`) VALUES
+(1, 'Manage Dashboard', 'active'),
+(2, 'Manage Settings', 'active'),
+(3, 'Manage Sub Admin', 'active'),
+(4, 'Manage City', 'active'),
+(5, 'Manage Service Provider', 'active'),
+(6, 'Manage Customer', 'active'),
+(7, 'Manage Service', 'active'),
+(8, 'Manage Booking', 'active'),
+(9, 'Manage Review', 'active');
 
 -- --------------------------------------------------------
 
@@ -183,7 +210,7 @@ INSERT INTO `settings` (`id`, `municipalityCharge`, `siteEmail`, `phoneNumber`, 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `view_id` varchar(255) DEFAULT NULL,
-  `type` enum('C','SP','A') DEFAULT 'C' COMMENT 'C=Customer, SP= Service Provider, A=Admin',
+  `type` enum('C','SP','A','SA') DEFAULT 'C' COMMENT 'C=Customer, SP= Service Provider, A=Admin',
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -192,6 +219,7 @@ CREATE TABLE `users` (
   `city_id` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(255) DEFAULT NULL,
   `profilePicture` varchar(255) DEFAULT NULL,
+  `subadmin_access_ids` varchar(256) DEFAULT NULL,
   `rating` varchar(255) DEFAULT NULL,
   `isAdmin` tinyint(1) NOT NULL DEFAULT '0',
   `isActive` tinyint(1) NOT NULL DEFAULT '1',
@@ -203,14 +231,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `phoneNumber`, `profilePicture`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
-(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', NULL, 'userImg/5f8d61043429d.png', NULL, 1, 1, 0, '2020-10-15 20:28:33'),
-(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, 0, 1, 0, '2020-10-15 15:24:41'),
-(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f89534773479.jpg', NULL, 0, 1, 0, '2020-10-15 17:24:05'),
-(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '1234567', '', '5', 0, 1, 0, '2020-10-19 05:55:28'),
-(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '1234567', '', NULL, 0, 1, 0, '2020-10-19 06:04:19'),
-(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '1234567', '', NULL, 0, 1, 0, '2020-10-19 06:05:17'),
-(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, 0, 1, 0, '2020-10-19 14:08:37');
+INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `phoneNumber`, `profilePicture`, `subadmin_access_ids`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
+(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', NULL, 'userImg/5f8d61043429d.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
+(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 15:24:41'),
+(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f89534773479.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 17:24:05'),
+(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '1234567', '', NULL, '5', 0, 1, 0, '2020-10-19 05:55:28'),
+(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:04:19'),
+(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:05:17'),
+(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, NULL, 0, 1, 0, '2020-10-19 14:08:37'),
+(9, NULL, 'SA', 'Sarmistha', 'Ghosh', 'subadmin@gmail.com', '$2y$10$o3bsFYJ4z39.0szD4lkvSOfgh48bQyZ1izIk9dMKKpPIxCYj1V63G', NULL, NULL, '1234567', 'userImg/5f8eedd9d587c.jpg', '4,7,9', NULL, 1, 1, 0, '2020-10-20 14:02:01');
 
 --
 -- Indexes for dumped tables
@@ -226,6 +255,12 @@ ALTER TABLE `bookings`
 -- Indexes for table `cities`
 --
 ALTER TABLE `cities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `leftmenu_list`
+--
+ALTER TABLE `leftmenu_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -275,6 +310,12 @@ ALTER TABLE `cities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `leftmenu_list`
+--
+ALTER TABLE `leftmenu_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
@@ -302,7 +343,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
