@@ -5,48 +5,130 @@
 							<!-- TABLE HOVER -->
 							<div class="panel widget">
 								<div class="panel-heading widget-title">
-									<h3 class="panel-title">Product Details</h3>
+									<h3 class="panel-title">Booking Details</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
 								</div>
 								<div class="panel-body">
-									<ul class="list-unstyled todo-list">
-										<li>
-											<p>
-												<span class="title">Product Name</span>
-												<span class="short-description"><?php echo $product['ProductTitle']; ?></span>
-												
-											</p>
-										</li>
-										
-										<li>
-											<p>
-												<span class="title">Product Description</span>
-												<span class="short-description"><?php echo $product['description']; ?></span>
-												
-											</p>
-										</li>
-										<li>
-											<p>
-												<span class="title">Status</span>
-												<span class="short-description"><?php echo $product['isActive'] == 1 ? "Active" : "Inactive"; ?></span>
-											</p>
-										</li>
-										<li>
-											<p>
-												<span class="title">Product Image</span>
-												<span class="short-description">
-												<?php foreach($product['product_images'] as $key => $img){ ?>
-													<img src="<?php echo $this->Url->build('/'.$img['originalpath']); ?>" alt="" class="show-image">
-												<?php } ?>	
-												</span>
-											</p>
-											
-										</li>
-									</ul>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover" id="sample_" style="width:75%">
+
+                                                
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Booking View Id</b></th>
+                                                        <td><?php echo $booking['view_id'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Booking Done on</b></th>
+                                                        <td><?php echo gmdate('M d, Y h:i A',strtotime($booking['created_date']));  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Booking Status</b></th>
+                                                        <td><?php echo $booking['service_status']=="P"?"Pending":($booking['service_status']=="C&R"?"Cancel & Refunded":"Completed");?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Customer Name</b></th>
+                                                        <td><?php echo $booking['customer']['firstName'].' '.$booking['customer']['lastName'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Service Provider Name</b></th>
+                                                        <td><?php echo $booking['provider']['firstName'].' '.$booking['provider']['lastName'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Service Name</b></th>
+                                                        <td><?php echo $booking['service']['title'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>City Name where service is provided</b></th>
+                                                        <td><?php echo $booking['city']['name'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Service Location</b></th>
+                                                        <td><?php echo $booking['service_loaction'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Booking Date</b></th>
+                                                        <td><?php echo gmdate('M d, Y h:i A',strtotime($booking['booking_date'])); ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Booking Time</b></th>
+                                                        <td><?php echo gmdate('h:i A',strtotime($booking['booking_time']));  ?></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Payment Status</b></th>
+                                                        <td><?php echo $booking['payment_status']==1?"Paid":"UnPaid";  ?></td>
+                                                    </tr>
+                                                    
+
+                                                <?php if($booking['payment_status']==1) { ?>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Currency</b></th>
+                                                        <td><?php echo $booking['payment']['currency'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Payment Method</b></th>
+                                                        <td><?php echo $booking['payment']['payment_method'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Transaction Id</b></th>
+                                                        <td><?php echo $booking['payment']['transaction_id'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Payment Date</b></th>
+                                                        <td><?php echo $booking['payment']['createdDate'];  ?></td>
+                                                    </tr>
+                                                    <?php } ?>
+
+                                            
+                                                    <tr>
+                                                        <th class="hidden-phone">Total Amount</th>
+                                                        <td>
+
+                                                            <table>
+                                                            <tr>
+                                                                
+                                                                <th>Service Charge</th>
+                                                                <th>Municipality Charge</th>
+                                                                <th>Total Charge</th>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>₵<?php echo $booking['payment']['service_charge']; ?></td>
+                                                                <td>₵<?php echo $booking['payment']['municipality_charge']; ?></td>
+                                                                <td>₵<?php echo $booking['payment']['total_amount']; ?></td>
+                                                            </tr>
+                                                            
+                                                            </table>
+                                                        </td>
+                                                    </tr>  
+                                                
+                                            </table>
+
+                                        </div>
+                                    </div>
+
 					            </div>
 							</div>
 						</div>
 					</div>
 				</div>
+
+                <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>

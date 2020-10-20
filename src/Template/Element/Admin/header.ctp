@@ -1,13 +1,14 @@
 <!--NAVBAR -->
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="brand">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background-color: #3c8dbc;">
+            <div class="brand" style="width: 260px;height:50px;background-color: #3c8dbc;display: block;">
                 <a href="<?php echo $this->Url->build('/admin/users/dashboard'); ?>">
-                <!-- <img src="<?php echo $this->Url->build('/'.$setting['logo']); ?>" alt="Logo" class="img-responsive logo"> -->
+                   <h4 style="color: #fff;margin-top: 20px;margin-left: 35px;">GoWasteOs</h4> 
+                    <!-- <img src="<?php //echo $this->Url->build('/'.$setting['logo']); ?>" alt="Logo" class="img-responsive logo"> -->
                 </a>
             </div>
             <div class="container-fluid">
-                <div class="navbar-btn">
-                    <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-list"></i></button>
+                <div class="navbar-btn" style="color: #fff;padding: 6px 6px;">
+                    <button type="button" class="btn-toggle-fullwidth" style="color: #fff;"><i class="lnr lnr-list"></i></button>
                 </div>
                 
                 <div id="navbar-menu">
@@ -28,8 +29,14 @@
                         </li> -->
                         
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="<?php echo $this->Url->build('/img/no-image.jpg'); ?>" class="img-circle" alt="User">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #fff;padding: 7px 7px;background-color: #3c8dbc;">
+                                <?php if (@$admin_details['profilePicture'] != '') { ?>
+                                    <img src="<?php echo $this->Url->build('/'.@$admin_details['profilePicture']); ?>" style="width: 40px;" class="img-circle" alt="User">
+                                <?php } else { ?>
+                                    <img src="<?php echo $this->Url->build('/img/no-image.jpg'); ?>" style="width: 40px;" class="img-circle" alt="User">
+                                <?php } ?>
+                                
+                                Welcome <?php echo @$admin_details['firstName'] ?>
                                 <span><?php echo isset($admin_details['name'])?$admin_details['name']:""; ?></span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"myaccount"]); ?>"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>

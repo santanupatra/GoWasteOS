@@ -10,46 +10,30 @@ class BookingsTable extends Table {
         $this->table('bookings');
         $this->primaryKey('id');
 
+        $this->belongsTo('Customers', [
+            'className' => 'Users',
+            'foreignKey' => 'customer_id'
+        ]);
+        $this->belongsTo('Providers', [
+            'className' => 'Users',
+            'foreignKey' => 'service_provider_id'
+        ]);
 
-        // $this->hasMany('ProductImages', [
-        // 	'foreignKey'=>'productId'
-        // ]);
+        $this->belongsTo('Cities', [
+            'foreignKey'=>'service_provided_city_id'
+        ]);
 
-        // In a table's initialize() method.
-        // $this->addBehavior('Products', [
-        //     'implementedMethods' => [
-        //         'superSlug' => 'slug',
-        //     ]
-        // ]);
+        $this->belongsTo('Services', [
+            'foreignKey'=>'service_id'
+        ]);
+
+        $this->hasOne('Payments', [
+            'className' => 'Payments',
+        ]);
+    
     }
 
 
-    public $belongsTo = array(
-        'Customer' => array(
-            'className' => 'Users',
-            'foreignKey' => 'customer_id'
-        ),
-        'Provider' => array(
-            'className' => 'Users',
-            'foreignKey' => 'service_provider_id'
-        ),
-        'City' => array(
-            'className' => 'Cities',
-            'foreignKey' => 'service_provided_city_id'
-        ),
-        'Service' => array(
-            'className' => 'Services',
-            'foreignKey' => 'service_id'
-        )
-    );
 
-
-    public $hasOne = array(
-        'Payment' => array(
-            'className' => 'Payments',
-            //'conditions' => array('Profile.published' => '1'),
-            'dependent' => true
-        )
-    );
 
 }

@@ -92,7 +92,7 @@
 				</div>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     // CKEDITOR.replace('description');
 
     function validateForm () {
@@ -124,4 +124,4 @@
     		return true;
     	}
     }
-</script>
+</script> -->

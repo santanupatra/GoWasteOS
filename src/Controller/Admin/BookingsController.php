@@ -32,7 +32,8 @@ class BookingsController extends AppController {
     public function index() {
         $this->viewBuilder()->layout('admin');
 
-        $bookings = $this->Bookings->find()->order(['id' => 'DESC']);;
+        $bookings = $this->Bookings->find()->contain(['Payments', 'Services', 'Cities', 'Providers', 'Customers'])
+        ->order(['Bookings.id' => 'DESC']);
         $this->set('bookings', $this->paginate($bookings));
     }
 
@@ -70,8 +71,8 @@ class BookingsController extends AppController {
                     $paymentStatus['total_amount']=$service['price'];   
                     $paymentStatus['currency']='Cent';   
                     $paymentStatus['transaction_id']='XXXXX-XXXX-XXXX';   
-                    $paymentStatus['payment_method']=1;   
-                    $paymentStatus['payment_status']='Cash';   
+                    $paymentStatus['payment_method']="Cash";   
+                    $paymentStatus['payment_status']=1;   
                     $payment = $this->Payments->patchEntity($payment, $paymentStatus);
                     if($this->Payments->save($payment)){
                         $this->Flash->success(__('Booking has been added successfully.'));
@@ -109,25 +110,13 @@ class BookingsController extends AppController {
         return $this->redirect(['action'=>'index']);
     }
 
-    public function status($id = null) {
-        $this->viewBuilder()->layout('admin');
-        $id = base64_decode($id);
-        $booking = $this->Bookings->get($id);
-        $status=array();
-        $status['is_active']=$booking['is_active']==1?0:1;
-        $city = $this->Bookings->patchEntity($booking, $status);
-        if ($this->Bookings->save($booking)) {
-            $this->Flash->success(__('Status has been changed successfully.'));
-            return $this->redirect(['action'=>'index']);
-        } else {
-            $this->Flash->error(__('Status can not be change. Please, try again.'));
-        }
-        return $this->redirect(['action'=>'index']);
-    }
-
     public function view($id = null){
+        $this->loadModel('Cities');
+        $this->loadModel('Users');
+        $this->loadModel('Services');
+        $this->loadModel('Payments');
         $id = base64_decode($id);
-        $booking = $this->Bookings->get($id);
+        $booking = $this->Bookings->find()->where(['Bookings.id'=>$id])->contain(['Payments', 'Services', 'Cities', 'Providers', 'Customers'])->first();
         $this->set(compact('booking'));
     }
 }

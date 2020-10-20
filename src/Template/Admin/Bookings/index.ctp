@@ -11,7 +11,7 @@
 									</div>
 								</div>
 								<div class="panel-body">
-                                <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a>
+                                <!-- <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a> -->
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
 											<tr>
@@ -22,23 +22,25 @@
 												<th>Customer Name</th>
 												<th>Service Provider Name</th>
 												<th>Service Name</th>
+												<th>City Name</th>
 												<th>Actions</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php $n=1;
-											foreach($bookings as $booking): ?>
+                                            foreach($bookings as $booking):  
+                                            //pr($booking)?>
 											<tr>
                                                 <td><?php echo '#'.$n; ?></td>
                                                 <td><?php echo $booking['view_id']; ?></td>
 												<td><?php echo $booking['booking_date']; ?></td>
-												<td><?php echo $booking['booking_time']; ?></td>
-												<td><?php echo $booking['customer_id']; ?></td>
-												<td><?php echo $booking['service_provider_id']; ?></td>
-												<td><?php echo $booking['service_id']; ?></td>
+												<td><?php echo date("h:i A",strtotime($booking['booking_time'])); ?></td>
+												<td><?php echo $booking['customer']['firstName'].' '.$booking['customer']['lastName']; ?></td>
+												<td><?php echo $booking['provider']['firstName'].' '.$booking['provider']['lastName']; ?></td>
+												<td><?php echo $booking['service']['title']; ?></td>
+												<td><?php echo $booking['city']['name']; ?></td>
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Bookings/view/'.base64_encode($booking['id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
-                                                    <a href="<?php echo $this->Url->build('/admin/Bookings/status/'.base64_encode($booking['id'])); ?>" class="btn btn-warning btn-xs gap-btn"> Change Status</a>
 													<a href="<?php echo $this->Url->build('/admin/Bookings/delete/'.base64_encode($booking['id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to delete this Booking?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>
 												</td>
 											</tr>

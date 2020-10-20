@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2020 at 01:00 PM
+-- Generation Time: Oct 20, 2020 at 06:28 PM
 -- Server version: 5.7.31-0ubuntu0.18.04.1
 -- PHP Version: 7.1.33-19+ubuntu18.04.1+deb.sury.org+1
 
@@ -50,7 +50,7 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `view_id`, `booking_date`, `booking_time`, `service_provider_id`, `customer_id`, `service_provided_city_id`, `service_loaction`, `service_id`, `service_charge`, `service_status`, `payment_status`, `is_active`, `created_date`) VALUES
-(1, 'BOOK0001', '2020-10-20', '07:05:00', '4', '5', '2', 'vvvvvvvvvvvv', '4', '249.99', 'P', 1, 1, '2020-10-20 07:07:29');
+(2, 'BOOK0002', '2020-10-28', '10:28:00', '7', '5', '2', 'kolkata', '7', '125.00', 'P', 1, 1, '2020-10-20 10:28:37');
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,31 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `booking_id`, `booking_view_id`, `service_charge`, `municipality_charge`, `total_amount`, `currency`, `transaction_id`, `payment_method`, `payment_status`, `is_active`, `createdDate`) VALUES
-(1, '1', 'BOOK0001', 249.99, 0.00, 249.99, 'Cent', 'XXXXX-XXXX-XXXX', '1', 0, 1, '2020-10-20 07:07:29');
+(1, '1', 'BOOK0001', 249.99, 0.00, 249.99, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 0, 1, '2020-10-20 07:07:29'),
+(2, '2', 'BOOK0002', 125.00, 0.00, 125.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-20 10:28:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL,
+  `to_id` varchar(255) DEFAULT NULL,
+  `from_id` varchar(255) DEFAULT NULL,
+  `rating` varchar(255) DEFAULT NULL,
+  `comment` text,
+  `is_active` tinyint(2) NOT NULL DEFAULT '1',
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `to_id`, `from_id`, `rating`, `comment`, `is_active`, `created_date`) VALUES
+(4, '5', '5', '1', 'aaaaaaaaaaaaaaaaa', 1, '2020-10-20 12:52:20');
 
 -- --------------------------------------------------------
 
@@ -168,6 +192,7 @@ CREATE TABLE `users` (
   `city_id` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(255) DEFAULT NULL,
   `profilePicture` varchar(255) DEFAULT NULL,
+  `rating` varchar(255) DEFAULT NULL,
   `isAdmin` tinyint(1) NOT NULL DEFAULT '0',
   `isActive` tinyint(1) NOT NULL DEFAULT '1',
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0',
@@ -178,14 +203,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `phoneNumber`, `profilePicture`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
-(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', NULL, 'userImg/5f8d61043429d.png', 1, 1, 0, '2020-10-15 20:28:33'),
-(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8952a7c21ab.jpg', 0, 1, 0, '2020-10-15 15:24:41'),
-(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f89534773479.jpg', 0, 1, 0, '2020-10-15 17:24:05'),
-(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '1234567', '', 0, 1, 0, '2020-10-19 05:55:28'),
-(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '1234567', '', 0, 1, 0, '2020-10-19 06:04:19'),
-(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '1234567', '', 0, 1, 0, '2020-10-19 06:05:17'),
-(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8d9de543d4f.jpg', 0, 1, 0, '2020-10-19 14:08:37');
+INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `phoneNumber`, `profilePicture`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
+(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', NULL, 'userImg/5f8d61043429d.png', NULL, 1, 1, 0, '2020-10-15 20:28:33'),
+(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, 0, 1, 0, '2020-10-15 15:24:41'),
+(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f89534773479.jpg', NULL, 0, 1, 0, '2020-10-15 17:24:05'),
+(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '1234567', '', '5', 0, 1, 0, '2020-10-19 05:55:28'),
+(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '1234567', '', NULL, 0, 1, 0, '2020-10-19 06:04:19'),
+(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '1234567', '', NULL, 0, 1, 0, '2020-10-19 06:05:17'),
+(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, 0, 1, 0, '2020-10-19 14:08:37');
 
 --
 -- Indexes for dumped tables
@@ -207,6 +232,12 @@ ALTER TABLE `cities`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -235,7 +266,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cities`
@@ -247,7 +278,13 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `services`

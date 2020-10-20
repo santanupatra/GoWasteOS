@@ -31,7 +31,7 @@ class ServicesController extends AppController {
     public function index() {
         $this->viewBuilder()->layout('admin');
 
-        $services = $this->Services->find()->order(['id' => 'DESC']);;
+        $services = $this->Services->find()->order(['id' => 'DESC']);
         $this->set('services', $this->paginate($services));
     }
 

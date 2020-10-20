@@ -60,7 +60,8 @@ class UsersController extends AppController {
 
         $users = $this->Users->find()->where(['isAdmin' => 0, 'isActive' => 1])->count();
         $date = date('Y-m-d H:i:s');
-        $this->set(compact('users', 'date'));
+        $activeClass = 'dashboard';
+        $this->set(compact('users', 'date','activeClass'));
     }
 
     /**
@@ -246,6 +247,86 @@ class UsersController extends AppController {
         $this->set(compact('service_providers'));
     }
 
+    public function subadmin_list() {
+        $this->viewBuilder()->layout('admin');
+
+        $subadmin_list = $this->Users->find()->where(['type'=>'SA', 'isDeleted'=>0])->order(['id'=>'desc']);
+        $subadmin_list = $this->paginate($subadmin_list)->toArray();
+
+        $this->set(compact('subadmin_list'));
+    }
+
+    public function add_subadmin() {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('LeftmenuList');
+        $leftmenu_list = $this->LeftmenuList->find()->where(['status'=>'active']);
+
+        $sub_admin = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+             
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            if(empty($duplicate)){
+                $name=trim($this->request->data['name']);
+                if (strpos($name, ' ') !== false) {
+                    $this->request->data['firstName']=explode(' ', $name)[0];
+                    $this->request->data['lastName']=explode(' ', $name)[1];
+                }else{
+                    $this->request->data['firstName']=$name;
+                }
+                if($this->request->data['profilePicture']['name'] != '') {
+                    $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                    $arr_ext = array('jpg', 'jpeg', 'png');
+                    $ext = $pathpart['extension'];
+                    if (in_array($ext, $arr_ext)) {
+                        $uploadFolder = "userImg";
+                        $uploadPath = WWW_ROOT . $uploadFolder;
+                        $filename = uniqid().".".$ext;
+                        $full_flg_path = $uploadPath . '/' . $filename;
+                        move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                        $this->request->data['profilePicture'] = "userImg/".$filename;
+                    } else {
+                        $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                        return $this->redirect(['action'=>'add_subadmin']);
+                    } 
+                } else {
+                    $this->request->data['profilePicture']='';
+                }
+
+                $leftmenuArr = $this->request->data['leftmenuid'];
+                $leftmenuString = '';
+                if(count($leftmenuArr)>0){
+                    for ($i=0; $i <count($leftmenuArr) ; $i++) { 
+                        if($leftmenuString){
+                            $leftmenuString = $leftmenuString.','.$leftmenuArr[$i];
+                        } else {
+                            $leftmenuString = $leftmenuArr[$i];
+                        }
+                    }
+                }
+
+                $this->request->data['subadmin_access_ids'] = $leftmenuString;
+                $this->request->data['isAdmin'] = 1;
+            
+                // echo '<pre>'; print_r($this->request->data);
+                // exit();
+                
+                $sub_admin = $this->Users->patchEntity($sub_admin, $this->request->data);
+                if($this->Users->save($sub_admin)){
+                    $this->Flash->success(__('Sub Admin has been added successfully.'));
+                    return $this->redirect(['action'=>'subadmin_list']);
+                }else{
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'add_subadmin']);
+                }
+            }else{
+                $this->Flash->success(__('Email already in use please use another.'));
+                return $this->redirect(['action'=>'add_subadmin']);
+            }
+        } 
+
+        $this->set(compact('leftmenu_list'));
+    }
+
     public function add_customer() {
         $this->viewBuilder()->layout('admin');
         
@@ -320,6 +401,8 @@ class UsersController extends AppController {
                         $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
                         return $this->redirect(['action'=>'add_service_provider']);
                     } 
+                } else {
+                    $this->request->data['profilePicture']='';
                 }
                 
                 $service_provider = $this->Users->patchEntity($service_provider, $this->request->data);
@@ -379,6 +462,12 @@ class UsersController extends AppController {
         $id = base64_decode($id);
         $service_provider = $this->Users->get($id);
         $this->set(compact('service_provider'));
+    }
+
+    public function subadmin_view($id = null){
+        $id = base64_decode($id);
+        $subadmin = $this->Users->get($id);
+        $this->set(compact('subadmin'));
     }
 
     public function edit_customer($id = null) {
@@ -464,4 +553,69 @@ class UsersController extends AppController {
         }
         $this->set(compact('user'));
     }
+
+    public function edit_subadmin($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $this->loadModel('LeftmenuList');
+        $leftmenu_list = $this->LeftmenuList->find()->where(['status'=>'active']);
+
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'subadmin_list']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+
+            $leftmenuArr = $this->request->data['leftmenuid'];
+            $leftmenuString = '';
+            if(count($leftmenuArr)>0){
+                for ($i=0; $i <count($leftmenuArr) ; $i++) { 
+                    if($leftmenuString){
+                        $leftmenuString = $leftmenuString.','.$leftmenuArr[$i];
+                    } else {
+                        $leftmenuString = $leftmenuArr[$i];
+                    }
+                }
+            }
+
+            $this->request->data['subadmin_access_ids'] = $leftmenuString;
+
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Sub Admin has been updated Successfully.'));
+                return $this->redirect(['action' => 'subadmin_list']);
+            }
+        }
+        $this->set(compact('user','leftmenu_list'));
+    }
+
+
+
+
+
 }
