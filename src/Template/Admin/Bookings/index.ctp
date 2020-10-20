@@ -33,9 +33,9 @@
                                                 <td><?php echo $booking['view_id']; ?></td>
 												<td><?php echo $booking['booking_date']; ?></td>
 												<td><?php echo $booking['booking_time']; ?></td>
-												<td>$<?php echo $booking['customer_id']; ?></td>
-												<td>$<?php echo $booking['service_provider_id']; ?></td>
-												<td>$<?php echo $booking['service_id']; ?></td>
+												<td><?php echo $booking['customer_id']; ?></td>
+												<td><?php echo $booking['service_provider_id']; ?></td>
+												<td><?php echo $booking['service_id']; ?></td>
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Bookings/view/'.base64_encode($booking['id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
                                                     <a href="<?php echo $this->Url->build('/admin/Bookings/status/'.base64_encode($booking['id'])); ?>" class="btn btn-warning btn-xs gap-btn"> Change Status</a>
