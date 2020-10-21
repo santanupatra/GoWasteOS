@@ -16,7 +16,7 @@
 
                                                 
                                                     <tr>
-                                                        <th class="hidden-phone"><b>Booking View Id</b></th>
+                                                        <th class="hidden-phone"><b>Booking Id</b></th>
                                                         <td><?php echo $booking['view_id'];  ?></td>
                                                     </tr>
                                                     <tr>

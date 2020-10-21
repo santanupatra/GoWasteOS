@@ -41,6 +41,8 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyCbMTT2CVS2GbGwOF-v8M4Umy_TG_qsu0M" type="text/javascript"></script>
 </head>
 
 <body>
@@ -123,6 +125,12 @@
 
 	});
 	</script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+    <script type="text/javascript">
+        $('#phone').mask('(000) 000-0000');
+    </script>
 	
 </body>
 

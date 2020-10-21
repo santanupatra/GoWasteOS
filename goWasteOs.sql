@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 21, 2020 at 03:06 PM
+-- Generation Time: Oct 21, 2020 at 07:55 PM
 -- Server version: 5.7.31-0ubuntu0.18.04.1
 -- PHP Version: 7.1.33-19+ubuntu18.04.1+deb.sury.org+1
 
@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
   `user_id` varchar(255) DEFAULT NULL,
-  `transaction_type` enum('D','C') DEFAULT NULL,
+  `transaction_type` enum('D','C') DEFAULT NULL COMMENT 'D=Debit, C=Credit',
   `total_service_charge` decimal(10,2) DEFAULT NULL,
   `municipality_charge` decimal(10,2) DEFAULT NULL,
   `total_amount_transferred` decimal(10,2) DEFAULT NULL,
@@ -40,6 +40,20 @@ CREATE TABLE `accounts` (
   `is_active` tinyint(2) DEFAULT '1',
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `accounts`
+--
+
+INSERT INTO `accounts` (`id`, `user_id`, `transaction_type`, `total_service_charge`, `municipality_charge`, `total_amount_transferred`, `booking_id`, `booking_view_id`, `is_active`, `created_date`) VALUES
+(1, '17', 'C', '2500.00', '300.00', '2500.00', '1', 'BOOK0001', 1, '2020-10-21 14:20:30'),
+(2, '18', 'D', '2500.00', '300.00', '2800.00', '1', 'BOOK0001', 1, '2020-10-21 14:20:30'),
+(3, '17', 'C', '11250.00', '1350.00', '11250.00', '2', 'BOOK0002', 1, '2020-10-21 14:21:30'),
+(4, '16', 'D', '11250.00', '1350.00', '12600.00', '2', 'BOOK0002', 1, '2020-10-21 14:21:30'),
+(5, '15', 'C', '20000.00', '2400.00', '20000.00', '3', 'BOOK0003', 1, '2020-10-21 14:21:59'),
+(6, '18', 'D', '20000.00', '2400.00', '22400.00', '3', 'BOOK0003', 1, '2020-10-21 14:21:59'),
+(7, '15', 'C', '25000.00', '3000.00', '25000.00', '4', 'BOOK0004', 1, '2020-10-21 14:22:33'),
+(8, '18', 'D', '25000.00', '3000.00', '28000.00', '4', 'BOOK0004', 1, '2020-10-21 14:22:33');
 
 -- --------------------------------------------------------
 
@@ -65,6 +79,16 @@ CREATE TABLE `bookings` (
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `view_id`, `booking_date`, `booking_time`, `waste_size`, `service_provider_id`, `customer_id`, `service_provided_city_id`, `service_loaction`, `service_id`, `service_charge`, `service_status`, `payment_status`, `is_active`, `created_date`) VALUES
+(1, 'BOOK0001', '2020-10-24', '10:00:00', '20', '17', '18', '1', 'Kolkata, West Bengal, India', '7', '125.00', 'P', 1, 1, '2020-10-21 14:20:30'),
+(2, 'BOOK0002', '2020-10-26', '12:30:00', '50', '17', '16', '1', 'Kolkata, West Bengal, India', '6', '225.00', 'P', 1, 1, '2020-10-21 14:21:30'),
+(3, 'BOOK0003', '2020-10-28', '11:00:00', '50', '15', '18', '1', 'Kolkata, West Bengal, India', '3', '400.00', 'P', 1, 1, '2020-10-21 14:21:59'),
+(4, 'BOOK0004', '2020-10-29', '08:30:00', '50', '15', '18', '1', 'Kolkata, West Bengal, India', '5', '500.00', 'P', 1, 1, '2020-10-21 14:22:33');
+
 -- --------------------------------------------------------
 
 --
@@ -83,7 +107,12 @@ CREATE TABLE `cities` (
 --
 
 INSERT INTO `cities` (`id`, `name`, `is_active`, `created_date`) VALUES
-(2, 'kolkata', 1, '2020-10-14 18:16:43');
+(1, 'kolkata', 1, '2020-10-21 14:14:00'),
+(2, 'Mumbai', 1, '2020-10-21 14:14:07'),
+(3, 'Delhi', 1, '2020-10-21 14:14:14'),
+(4, 'Pune', 1, '2020-10-21 14:14:20'),
+(5, 'Hydrabad', 1, '2020-10-21 14:14:27'),
+(6, 'Amritsar', 1, '2020-10-21 14:14:45');
 
 -- --------------------------------------------------------
 
@@ -133,6 +162,16 @@ CREATE TABLE `payments` (
   `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `booking_id`, `booking_view_id`, `service_charge`, `municipality_charge`, `total_amount`, `currency`, `transaction_id`, `payment_method`, `payment_status`, `is_active`, `createdDate`) VALUES
+(1, '1', 'BOOK0001', 2500.00, 300.00, 2800.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:20:30'),
+(2, '2', 'BOOK0002', 11250.00, 1350.00, 12600.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:21:30'),
+(3, '3', 'BOOK0003', 20000.00, 2400.00, 22400.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:21:59'),
+(4, '4', 'BOOK0004', 25000.00, 3000.00, 28000.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:22:33');
+
 -- --------------------------------------------------------
 
 --
@@ -154,7 +193,10 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `to_id`, `from_id`, `rating`, `comment`, `is_active`, `created_date`) VALUES
-(4, '5', '5', '1', 'aaaaaaaaaaaaaaaaa', 1, '2020-10-20 12:52:20');
+(1, '18', '17', '5', 'good', 1, '2020-10-21 14:23:08'),
+(2, '18', '15', '5', 'good!', 1, '2020-10-21 14:23:29'),
+(3, '15', '16', '5', 'good!', 1, '2020-10-21 14:23:43'),
+(4, '16', '18', '4', 'good!', 1, '2020-10-21 14:23:57');
 
 -- --------------------------------------------------------
 
@@ -238,14 +280,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `company_name`, `phoneNumber`, `profilePicture`, `subadmin_access_ids`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
-(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', '', NULL, 'userImg/5f8d61043429d.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
-(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 15:24:41'),
-(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f89534773479.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 17:24:05'),
-(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, '5', 0, 1, 0, '2020-10-19 05:55:28'),
-(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:04:19'),
-(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:05:17'),
-(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, NULL, 0, 1, 0, '2020-10-19 14:08:37'),
-(9, NULL, 'SA', 'Sarmistha', 'Ghosh', 'subadmin@gmail.com', '$2y$10$o3bsFYJ4z39.0szD4lkvSOfgh48bQyZ1izIk9dMKKpPIxCYj1V63G', NULL, NULL, '', '1234567', 'userImg/5f8eedd9d587c.jpg', '4,7,9', NULL, 1, 1, 0, '2020-10-20 14:02:01');
+(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', '', NULL, 'userImg/5f9042156e140.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
+(14, NULL, 'SA', 'Sub', 'Admin', 'subadmin@gmail.com', '$2y$10$hOzCqwBBNkwryVhdicqsS.zeDtSzikjhG.LqiFJNXLllIkwnuIQAe', NULL, NULL, NULL, '(123) 456-7890', 'userImg/5f90420a88e31.png', '1,4,5,7,9', NULL, 1, 1, 0, '2020-10-21 14:13:30'),
+(15, NULL, 'SP', 'sonali', 'bhaumik', 'sonali.bhaumik@cbnits.com', NULL, 'Milan Bazar, Samarpally, Krishnapur, Kestopur, Calcutta, West Bengal, India', '1', '', '(123) 456-7890', 'userImg/5f9042ac8f0cb.png', NULL, '5', 0, 1, 0, '2020-10-21 14:16:12'),
+(16, NULL, 'C', 'Sharmistha', 'Ghosh', 'sharmistha.ghosh@cbnits.com', NULL, 'Paikpara, Calcutta, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f9042ec8de32.png', NULL, '4', 0, 1, 0, '2020-10-21 14:17:16'),
+(17, NULL, 'SP', 'asmita', NULL, 'asmita@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', '', '(123) 456-7890', 'userImg/5f904343d9dbc.png', NULL, NULL, 0, 1, 0, '2020-10-21 14:18:43'),
+(18, NULL, 'C', 'pausali', NULL, 'paushali@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f904378dc056.png', NULL, '5', 0, 1, 0, '2020-10-21 14:19:36');
 
 --
 -- Indexes for dumped tables
@@ -313,19 +353,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `leftmenu_list`
@@ -337,7 +377,7 @@ ALTER TABLE `leftmenu_list`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -361,7 +401,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

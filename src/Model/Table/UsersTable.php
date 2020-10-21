@@ -12,6 +12,9 @@ class UsersTable extends Table {
     public function initialize(array $config) {
         $this->table('users');
         $this->primaryKey('id');  
+        $this->belongsTo('Cities', [
+            'foreignKey'=>'city_id'
+        ]);
     }
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
@@ -24,6 +27,8 @@ class UsersTable extends Table {
             $hasher = new DefaultPasswordHasher();
         }
         return true;
+
+
     }
 
 }

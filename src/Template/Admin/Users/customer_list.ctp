@@ -39,6 +39,7 @@
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Users/edit_customer/'.base64_encode($customer['id'])); ?>" class="btn btn-info btn-xs gap-btn"><i class="fa fa-edit edit-tag-icon"></i> Edit</a>
 													<a href="<?php echo $this->Url->build('/admin/Users/customer_view/'.base64_encode($customer['id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
+													<a href="<?php echo $this->Url->build('/admin/Accounts/index/'.base64_encode($customer['id'])); ?>" class="btn btn-primary btn-xs gap-btn"><i class="lnr lnr-database"></i> Account</a>
                                                     <a href="<?php echo $this->Url->build('/admin/Users/status/'.base64_encode($customer['id'])); ?>" class="btn btn-warning btn-xs gap-btn"> Change Status</a>
 													<a href="<?php echo $this->Url->build('/admin/Users/delete/'.base64_encode($customer['id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to remove this User?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>
 												</td>

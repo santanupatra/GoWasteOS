@@ -78,7 +78,7 @@
 
                                                 <div class="form-group">
                                                     <label for="page-name" class="control-label">Service Location</label>
-                                                    <?php echo $this->Form->input('service_loaction',['class' => 'form-control',  'label'=>false]); ?>
+                                                    <?php echo $this->Form->input('service_loaction',['class' => 'form-control',  'label'=>false, 'id'=>'address']); ?>
                                                     
                                                 </div>
                                             </div>
@@ -130,3 +130,17 @@
     	}
     }
 </script> -->
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        initialize();
+    });
+</script>
+
+<script type="text/javascript">
+function initialize() {
+            var input = document.getElementById('address');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>

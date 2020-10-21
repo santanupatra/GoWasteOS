@@ -461,13 +461,15 @@ class UsersController extends AppController {
 
     public function customer_view($id = null){
         $id = base64_decode($id);
-        $customer = $this->Users->get($id);
+        $this->loadModel('Cities');
+        $customer = $this->Users->find()->where(['Users.id'=>$id])->contain(['Cities'])->first();
         $this->set(compact('customer'));
     }
 
     public function service_provider_view($id = null){
         $id = base64_decode($id);
-        $service_provider = $this->Users->get($id);
+        $this->loadModel('Cities');
+        $service_provider = $this->Users->find()->where(['Users.id'=>$id])->contain(['Cities'])->first();
         $this->set(compact('service_provider'));
     }
 

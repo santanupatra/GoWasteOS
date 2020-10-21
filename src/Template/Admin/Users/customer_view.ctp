@@ -34,6 +34,20 @@
 												
 											</p>
 										</li>
+                                        <li>
+											<p>
+												<span class="title">Address</span>
+												<span class="short-description"><?php echo $customer['address']; ?></span>
+												
+											</p>
+										</li>
+                                        <li>
+											<p>
+												<span class="title">City</span>
+												<span class="short-description"><?php echo $customer['city']['name']; ?></span>
+												
+											</p>
+										</li>
 										<li>
 											<p>
 												<span class="title">Status</span>
