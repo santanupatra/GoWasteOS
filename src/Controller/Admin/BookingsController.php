@@ -48,6 +48,9 @@ class BookingsController extends AppController {
         $this->loadModel('Users');
         $this->loadModel('Services');
         $this->loadModel('Payments');
+        $this->loadModel('Accounts');
+        $this->loadModel('Settings');
+        $settings = $this->Settings->get(1);
         $booking = $this->Bookings->newEntity();
         if ($this->request->is('post')) {
             $service = $this->Services->get($this->request->data['service_id']);
@@ -62,21 +65,52 @@ class BookingsController extends AppController {
                 $status['view_id']='BOOK000'.$insertedId;
                 $bookinEdit = $this->Bookings->patchEntity($bookinEdit, $status);
                 if($this->Bookings->save($bookinEdit)){
+                    $total_service_charge=$service['price']*$this->request->data['waste_size'];
+                    $municipality_charge=($total_service_charge)*($settings['municipalityCharge']/100);
+                    $total_amount=$municipality_charge+$total_service_charge; 
                     $payment = $this->Payments->newEntity();
                     $paymentStatus=array();
                     $paymentStatus['booking_id']=$insertedId;   
                     $paymentStatus['booking_view_id']='BOOK000'.$insertedId;   
-                    $paymentStatus['service_charge']=$service['price'];   
-                    $paymentStatus['municipality_charge']=0.00;   
-                    $paymentStatus['total_amount']=$service['price'];   
+                    $paymentStatus['service_charge']=$total_service_charge;   
+                    $paymentStatus['municipality_charge']=$municipality_charge;   
+                    $paymentStatus['total_amount']=$total_amount;
                     $paymentStatus['currency']='Cent';   
                     $paymentStatus['transaction_id']='XXXXX-XXXX-XXXX';   
                     $paymentStatus['payment_method']="Cash";   
                     $paymentStatus['payment_status']=1;   
                     $payment = $this->Payments->patchEntity($payment, $paymentStatus);
                     if($this->Payments->save($payment)){
-                        $this->Flash->success(__('Booking has been added successfully.'));
-                        return $this->redirect(['action'=>'index']);
+
+                       //For Service Provider 
+                        $accountSP = $this->Accounts->newEntity();
+                        $accountStatus=array();
+                        $accountStatus['user_id']=$this->request->data['service_provider_id'];   
+                        $accountStatus['transaction_type']='C';   
+                        $accountStatus['total_service_charge']=$total_service_charge;   
+                        $accountStatus['municipality_charge']=$municipality_charge;   
+                        $accountStatus['total_amount_transferred']=$total_service_charge;                         
+                        $accountStatus['booking_id']=$insertedId;   
+                        $accountStatus['booking_view_id']='BOOK000'.$insertedId;   
+                        $accountSP = $this->Accounts->patchEntity($accountSP, $accountStatus);
+                        if($this->Accounts->save($accountSP)){
+
+                        //For Customer 
+                        $accountC = $this->Accounts->newEntity();
+                        $accountStatus=array();
+                        $accountStatus['user_id']=$this->request->data['customer_id'];   
+                        $accountStatus['transaction_type']='D';   
+                        $accountStatus['total_service_charge']=$total_service_charge;   
+                        $accountStatus['municipality_charge']=$municipality_charge;   
+                        $accountStatus['total_amount_transferred']=$total_amount;                         
+                        $accountStatus['booking_id']=$insertedId;   
+                        $accountStatus['booking_view_id']='BOOK000'.$insertedId;   
+                        $accountC = $this->Accounts->patchEntity($accountC, $accountStatus);
+                            if($this->Accounts->save($accountC)){
+                                $this->Flash->success(__('Booking has been added successfully.'));
+                                return $this->redirect(['action'=>'index']);
+                            }
+                        }
                     }
                 }
         	} else {
@@ -100,10 +134,16 @@ class BookingsController extends AppController {
      */
     public function delete($id = null) {
         $this->viewBuilder()->layout('admin');
+        $this->loadModel('Payments');
+        $this->loadModel('Accounts');
         $id = base64_decode($id);
         $booking = $this->Bookings->get($id);
         if ($this->Bookings->delete($booking)) {
-            $this->Flash->success(__('Booking has been deleted.'));
+            if($this->Payments->deleteAll(['booking_id' => $id])){
+                if($this->Accounts->deleteAll(['booking_id' => $id])){
+                    $this->Flash->success(__('Booking has been deleted.'));
+                }
+            }
         }else {
             $this->Flash->error(__('Booking could not deleted. Please, try again.'));
         }

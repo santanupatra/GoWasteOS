@@ -26,6 +26,11 @@
                                                     <?php echo $this->Form->input('booking_time',['type'=>'time','class' => 'form-control', 'label'=>false,'placeholder'=>'Time']); ?>
                                                     
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="page-name" class="control-label">Waste size in ton</label>
+                                                    <?php echo $this->Form->input('waste_size',['type'=>'number','class' => 'form-control', 'label'=>false,'placeholder'=>'Waste Size']); ?>
+                                                    
+                                                </div>
 
                                                 <div class="form-group">
                                                     <label for="email" class="control-label">Choose Service Provider</label>

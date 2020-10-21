@@ -25,6 +25,12 @@
                                                 </div>
 
                                                 <div class="form-group">
+                                                    <label for="first-name" class="control-label">Company Name</label>
+                                                    <?php echo $this->Form->input('company_name',['class' => 'form-control character-text companyName', 'label'=>false,'id' => 'companyName','placeholder'=>'Company Name']); ?>
+                                                    <p class="companyNameError error-message"></p>
+                                                </div>
+
+                                                <div class="form-group">
                                                     <label for="first-name" class="control-label">Phone</label>
                                                     <input type="text" class="form-control" name="phoneNumber" id="phone" placeholder="Phone" >
                                                     <p class="phoneError error-message"></p>
@@ -38,19 +44,23 @@
 
                                                 <?php echo $this->Form->input('type',['type'=>'hidden','class' => 'form-control email-text','label'=>false, 'value'=>'SP']); ?>
 
-                                                <!-- <div class="form-group">
+                                                <div class="form-group">
                                                     <label for="email" class="control-label">Address</label>
                                                     <?php echo $this->Form->input('address',['class' => 'form-control email-text','label'=>false,'id' => 'address','placeholder'=>'Address']); ?>
                                                     <p class="emailError error-message"></p>
-                                                </div> -->
+                                                </div>
 
-                                                <!-- <div class="form-group">
-                                                    <label for="email" class="control-label">Type</label>
-                                                    <select name="type" class="form-control">
-                                                        <option value="SP">Service Provider</option>
+                                                <div class="form-group">
+                                                    <label for="email" class="control-label">Choose City</label>
+                                                    <select name="city_id" class="form-control" id="cityName">
+                                                        <option value="SP">City</option>
+                                                        <?php 
+                                                        foreach($cities as $city): ?>
+                                                        <option value="<?php echo $city['id']; ?>"><?php echo $city['name']; ?></option>
+                                                        <?php endforeach ?>
                                                     </select>
-                                                    <p class="emailError error-message"></p>
-                                                </div> -->
+                                                    <p class="cityNameError error-message"></p>
+                                                </div>
                                                 
                                                 <div class="form-group">
                                                     <label for="image-upload" class="control-label">Image</label>

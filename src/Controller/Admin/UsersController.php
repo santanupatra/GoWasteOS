@@ -370,6 +370,10 @@ class UsersController extends AppController {
                 return $this->redirect(['action'=>'add_customer']);
             }
         }
+        
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities'));
     }
 
     public function add_service_provider() {
@@ -418,6 +422,9 @@ class UsersController extends AppController {
                 return $this->redirect(['action'=>'add_service_provider']);
             }
         }
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities'));
     }
 
     public function delete($id = null) {
@@ -509,7 +516,9 @@ class UsersController extends AppController {
                 return $this->redirect(['action' => 'customer_list']);
             }
         }
-        $this->set(compact('user'));
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities', 'user'));
     }
 
     public function edit_service_provider($id = null) {
@@ -551,7 +560,9 @@ class UsersController extends AppController {
                 return $this->redirect(['action' => 'service_provider_list']);
             }
         }
-        $this->set(compact('user'));
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities', 'user'));
     }
 
     public function edit_subadmin($id = null) {

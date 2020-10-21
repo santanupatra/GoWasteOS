@@ -20,14 +20,16 @@
                                                     <p class="pNameError error-message"></p>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="page-name" class="control-label">Price</label>
+                                                    <label for="page-name" class="control-label">Price per ton in Cent</label>
                                                     <?php echo $this->Form->input('price',['type'=>'number','class' => 'form-control priceName','label'=>false,'placeholder'=>'Price','id' => 'priceName']); ?>
                                                     <p class="priceNameError error-message"></p>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="page-name" class="control-label">Icon</label>
-                                                    <?php echo $this->Form->input('image',['class' => 'form-control', 'type'=>'file', 'label'=>false]); ?>
-                                                    
+                                                    <?php echo $this->Form->input('image',['class' => 'form-control', 'type'=>'file', 'label'=>false, 'id'=>'image-upload']); ?>                                                    
+                                                </div>
+                                                <div class="form-group">                                                    
+                                                    <img src="<?php echo $this->Url->build('/service_image/no-image.png'); ?>" id="user-image"  class="show-image">
                                                 </div>
                                             </div>
                                             <div class="col-md-12">

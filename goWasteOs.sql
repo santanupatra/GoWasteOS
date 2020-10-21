@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2020 at 07:35 PM
+-- Generation Time: Oct 21, 2020 at 03:06 PM
 -- Server version: 5.7.31-0ubuntu0.18.04.1
 -- PHP Version: 7.1.33-19+ubuntu18.04.1+deb.sury.org+1
 
@@ -25,6 +25,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  `transaction_type` enum('D','C') DEFAULT NULL,
+  `total_service_charge` decimal(10,2) DEFAULT NULL,
+  `municipality_charge` decimal(10,2) DEFAULT NULL,
+  `total_amount_transferred` decimal(10,2) DEFAULT NULL,
+  `booking_id` varchar(255) DEFAULT NULL,
+  `booking_view_id` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(2) DEFAULT '1',
+  `created_date` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `bookings`
 --
 
@@ -33,6 +52,7 @@ CREATE TABLE `bookings` (
   `view_id` varchar(255) DEFAULT NULL,
   `booking_date` date DEFAULT NULL,
   `booking_time` time DEFAULT NULL,
+  `waste_size` varchar(255) DEFAULT NULL,
   `service_provider_id` varchar(255) DEFAULT NULL,
   `customer_id` varchar(255) DEFAULT NULL,
   `service_provided_city_id` varchar(255) DEFAULT NULL,
@@ -44,13 +64,6 @@ CREATE TABLE `bookings` (
   `is_active` tinyint(2) NOT NULL DEFAULT '1',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`id`, `view_id`, `booking_date`, `booking_time`, `service_provider_id`, `customer_id`, `service_provided_city_id`, `service_loaction`, `service_id`, `service_charge`, `service_status`, `payment_status`, `is_active`, `created_date`) VALUES
-(2, 'BOOK0002', '2020-10-28', '10:28:00', '7', '5', '2', 'kolkata', '7', '125.00', 'P', 1, 1, '2020-10-20 10:28:37');
 
 -- --------------------------------------------------------
 
@@ -119,14 +132,6 @@ CREATE TABLE `payments` (
   `is_active` tinyint(2) NOT NULL DEFAULT '1',
   `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`id`, `booking_id`, `booking_view_id`, `service_charge`, `municipality_charge`, `total_amount`, `currency`, `transaction_id`, `payment_method`, `payment_status`, `is_active`, `createdDate`) VALUES
-(1, '1', 'BOOK0001', 249.99, 0.00, 249.99, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 0, 1, '2020-10-20 07:07:29'),
-(2, '2', 'BOOK0002', 125.00, 0.00, 125.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-20 10:28:37');
 
 -- --------------------------------------------------------
 
@@ -217,6 +222,7 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `city_id` varchar(255) DEFAULT NULL,
+  `company_name` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(255) DEFAULT NULL,
   `profilePicture` varchar(255) DEFAULT NULL,
   `subadmin_access_ids` varchar(256) DEFAULT NULL,
@@ -231,19 +237,25 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `phoneNumber`, `profilePicture`, `subadmin_access_ids`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
-(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', NULL, 'userImg/5f8d61043429d.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
-(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 15:24:41'),
-(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f89534773479.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 17:24:05'),
-(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '1234567', '', NULL, '5', 0, 1, 0, '2020-10-19 05:55:28'),
-(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:04:19'),
-(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:05:17'),
-(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, NULL, 0, 1, 0, '2020-10-19 14:08:37'),
-(9, NULL, 'SA', 'Sarmistha', 'Ghosh', 'subadmin@gmail.com', '$2y$10$o3bsFYJ4z39.0szD4lkvSOfgh48bQyZ1izIk9dMKKpPIxCYj1V63G', NULL, NULL, '1234567', 'userImg/5f8eedd9d587c.jpg', '4,7,9', NULL, 1, 1, 0, '2020-10-20 14:02:01');
+INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `company_name`, `phoneNumber`, `profilePicture`, `subadmin_access_ids`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
+(1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', '', NULL, 'userImg/5f8d61043429d.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
+(3, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumik@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f8952a7c21ab.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 15:24:41'),
+(4, NULL, 'SP', 'Sonali', NULL, 'sonali.bhaumik2@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f89534773479.jpg', NULL, NULL, 0, 1, 0, '2020-10-15 17:24:05'),
+(5, NULL, 'C', 'Sarmistha', 'Ghosh', 'sonali.bhaumikm@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, '5', 0, 1, 0, '2020-10-19 05:55:28'),
+(6, NULL, 'SP', 'test', 'User', 'sonali.bhaumik2saas@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:04:19'),
+(7, NULL, 'SP', 'kolkata', NULL, 'sonali.bhaumikmm1@cbnits.com', NULL, NULL, '', '', '1234567', '', NULL, NULL, 0, 1, 0, '2020-10-19 06:05:17'),
+(8, NULL, 'SP', 'check', NULL, 'sonali.bhaumixxk2@cbnits.com', NULL, NULL, '', '', '1234567', 'userImg/5f8d9de543d4f.jpg', NULL, NULL, 0, 1, 0, '2020-10-19 14:08:37'),
+(9, NULL, 'SA', 'Sarmistha', 'Ghosh', 'subadmin@gmail.com', '$2y$10$o3bsFYJ4z39.0szD4lkvSOfgh48bQyZ1izIk9dMKKpPIxCYj1V63G', NULL, NULL, '', '1234567', 'userImg/5f8eedd9d587c.jpg', '4,7,9', NULL, 1, 1, 0, '2020-10-20 14:02:01');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `bookings`
@@ -298,10 +310,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `accounts`
+--
+ALTER TABLE `accounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cities`
@@ -319,7 +337,7 @@ ALTER TABLE `leftmenu_list`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `reviews`

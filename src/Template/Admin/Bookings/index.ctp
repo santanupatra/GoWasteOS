@@ -11,7 +11,7 @@
 									</div>
 								</div>
 								<div class="panel-body">
-                                <!-- <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a> -->
+                                 <!-- <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a>  -->
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
 											<tr>
@@ -19,8 +19,8 @@
 												<th>Booking Id</th>
 												<th>Booking Date</th>
 												<th>Booking Time</th>
-												<th>Customer Name</th>
-												<th>Service Provider Name</th>
+												<th>Service Status</th>
+												<th>Payment Status</th>
 												<th>Service Name</th>
 												<th>City Name</th>
 												<th>Actions</th>
@@ -35,8 +35,8 @@
                                                 <td><?php echo $booking['view_id']; ?></td>
 												<td><?php echo $booking['booking_date']; ?></td>
 												<td><?php echo date("h:i A",strtotime($booking['booking_time'])); ?></td>
-												<td><?php echo $booking['customer']['firstName'].' '.$booking['customer']['lastName']; ?></td>
-												<td><?php echo $booking['provider']['firstName'].' '.$booking['provider']['lastName']; ?></td>
+												<td><?php echo $booking['service_status']=="P"?"Pending":($booking['service_status']=="C&R"?"Cancel & Refunded":"Completed");?></td>
+												<td><?php echo $booking['payment_status']==1?"Paid":"UnPaid";  ?></td>
 												<td><?php echo $booking['service']['title']; ?></td>
 												<td><?php echo $booking['city']['name']; ?></td>
 												<td>

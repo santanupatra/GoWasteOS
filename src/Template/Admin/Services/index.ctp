@@ -38,7 +38,7 @@
                                                 </td>
 												<td><?php echo $service['title']; ?></td>
 												<td><?php echo $service['content']; ?></td>
-												<td>$<?php echo $service['price']; ?></td>
+												<td>₵<?php echo $service['price']; ?></td>
 												<td>
                                                     <?php if($service['isActive']==1) { ?>
 													<img src="<?php echo $this->Url->build('/img/success.png'); ?>" class="status-image" />

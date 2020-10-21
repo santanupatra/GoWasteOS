@@ -81,6 +81,16 @@
                                                     </tr>
                                                     <?php } ?>
 
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Size of Waste in ton</b></th>
+                                                        <td><?php echo $booking['waste_size'];  ?></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Service Charge per ton</b></th>
+                                                        <td>₵<?php echo $booking['service_charge'];  ?></td>
+                                                    </tr>
+
                                             
                                                     <tr>
                                                         <th class="hidden-phone">Total Amount</th>
@@ -89,7 +99,7 @@
                                                             <table>
                                                             <tr>
                                                                 
-                                                                <th>Service Charge</th>
+                                                                <th>Total Service Charge</th>
                                                                 <th>Municipality Charge</th>
                                                                 <th>Total Charge</th>
                                                             </tr>
