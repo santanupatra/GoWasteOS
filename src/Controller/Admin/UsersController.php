@@ -54,13 +54,58 @@ class UsersController extends AppController {
      *
      * @return void
      */
-    public function dashboard() {
+    public function dashboard_old() {
         $this->viewBuilder()->layout('admin');
         $this->loadModel('Users');
 
         $users = $this->Users->find()->where(['isAdmin' => 0, 'isActive' => 1])->count();
         $date = date('Y-m-d H:i:s');
-        $this->set(compact('users', 'date'));
+        $activeClass = 'dashboard';
+        $this->set(compact('users', 'date','activeClass'));
+    }
+
+    public function dashboard() {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $this->loadModel('Services');
+        $this->loadModel('Reviews');
+        $this->loadModel('Cities');
+        $this->loadModel('Bookings');
+
+        $users = $this->Users->find()->where(['isAdmin' => 0, 'isActive' => 1])->count();
+        $date = date('Y-m-d H:i:s');
+        $activeClass = 'dashboard';
+
+        $customers_count = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->count();
+        $service_providers_count = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->count();
+        $subadmin_count = $this->Users->find()->where(['type'=>'SA', 'isDeleted'=>0])->count();
+        $services_count = $this->Services->find()->count();
+        $reviews_count = $this->Reviews->find()->count();
+        $cities_count = $this->Cities->find()->count();
+        $bookings_count = $this->Bookings->find()->count();
+
+        $dashboard_count_arr = array(
+            'customers'=>$customers_count,
+            'service_providers'=>$service_providers_count,
+            'subadmin'=>$subadmin_count,
+            'services'=>$services_count,
+            'reviews'=>$reviews_count,
+            'cities'=>$cities_count,
+            'bookings'=>$bookings_count,
+        );
+
+        // $bookings = $this->Bookings->find()->order(['id'=>'desc'])->toArray();
+        $conn = $this->Bookings->getConnection();
+        $stmt = $conn->execute("SELECT count(booking_date) AS counted_leads, booking_date AS count_date FROM bookings
+                                 GROUP BY booking_date ORDER BY id DESC");
+        $bookings = $stmt->fetchAll('assoc');
+
+        $city_stmt = $conn->execute("SELECT t2.name ,count(t1.id) AS total_booking FROM bookings t1 
+                                    INNER JOIN cities t2 ON t1.service_provided_city_id = t2.id GROUP BY t2.name");
+        $city_bookings = $city_stmt->fetchAll('assoc');
+        
+        
+        $this->set(compact('users', 'date','activeClass','dashboard_count_arr','bookings','city_bookings'));
     }
 
     /**
@@ -246,6 +291,86 @@ class UsersController extends AppController {
         $this->set(compact('service_providers'));
     }
 
+    public function subadmin_list() {
+        $this->viewBuilder()->layout('admin');
+
+        $subadmin_list = $this->Users->find()->where(['type'=>'SA', 'isDeleted'=>0])->order(['id'=>'desc']);
+        $subadmin_list = $this->paginate($subadmin_list)->toArray();
+
+        $this->set(compact('subadmin_list'));
+    }
+
+    public function add_subadmin() {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('LeftmenuList');
+        $leftmenu_list = $this->LeftmenuList->find()->where(['status'=>'active']);
+
+        $sub_admin = $this->Users->newEntity();
+        if ($this->request->is('post')) {
+             
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            if(empty($duplicate)){
+                $name=trim($this->request->data['name']);
+                if (strpos($name, ' ') !== false) {
+                    $this->request->data['firstName']=explode(' ', $name)[0];
+                    $this->request->data['lastName']=explode(' ', $name)[1];
+                }else{
+                    $this->request->data['firstName']=$name;
+                }
+                if($this->request->data['profilePicture']['name'] != '') {
+                    $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                    $arr_ext = array('jpg', 'jpeg', 'png');
+                    $ext = $pathpart['extension'];
+                    if (in_array($ext, $arr_ext)) {
+                        $uploadFolder = "userImg";
+                        $uploadPath = WWW_ROOT . $uploadFolder;
+                        $filename = uniqid().".".$ext;
+                        $full_flg_path = $uploadPath . '/' . $filename;
+                        move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                        $this->request->data['profilePicture'] = "userImg/".$filename;
+                    } else {
+                        $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                        return $this->redirect(['action'=>'add_subadmin']);
+                    } 
+                } else {
+                    $this->request->data['profilePicture']='';
+                }
+
+                $leftmenuArr = $this->request->data['leftmenuid'];
+                $leftmenuString = '';
+                if(count($leftmenuArr)>0){
+                    for ($i=0; $i <count($leftmenuArr) ; $i++) { 
+                        if($leftmenuString){
+                            $leftmenuString = $leftmenuString.','.$leftmenuArr[$i];
+                        } else {
+                            $leftmenuString = $leftmenuArr[$i];
+                        }
+                    }
+                }
+
+                $this->request->data['subadmin_access_ids'] = $leftmenuString;
+                $this->request->data['isAdmin'] = 1;
+            
+                // echo '<pre>'; print_r($this->request->data);
+                // exit();
+                
+                $sub_admin = $this->Users->patchEntity($sub_admin, $this->request->data);
+                if($this->Users->save($sub_admin)){
+                    $this->Flash->success(__('Sub Admin has been added successfully.'));
+                    return $this->redirect(['action'=>'subadmin_list']);
+                }else{
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'add_subadmin']);
+                }
+            }else{
+                $this->Flash->success(__('Email already in use please use another.'));
+                return $this->redirect(['action'=>'add_subadmin']);
+            }
+        } 
+
+        $this->set(compact('leftmenu_list'));
+    }
+
     public function add_customer() {
         $this->viewBuilder()->layout('admin');
         
@@ -289,6 +414,10 @@ class UsersController extends AppController {
                 return $this->redirect(['action'=>'add_customer']);
             }
         }
+        
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities'));
     }
 
     public function add_service_provider() {
@@ -320,14 +449,10 @@ class UsersController extends AppController {
                         $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
                         return $this->redirect(['action'=>'add_service_provider']);
                     } 
+                } else {
+                    $this->request->data['profilePicture']='';
                 }
-                // $this->request->data['user_type'] = 'SP';
-                // // pr($this->request->data); 
-                //  $service_provider = $this->Users->patchEntity($service_provider, array('firstName' => 'Melon', 'lastName' => 'Head','utype'=>'A','email'=>'testtt@gmail.com','created_date'=>'2020-10-16 06:47:14'));
-                // // pr($service_provider);
-                // $this->Users->save($service_provider);
-                // // $this->Users->save($service_provider);
-                // exit();
+                
                 $service_provider = $this->Users->patchEntity($service_provider, $this->request->data);
                 if($this->Users->save($service_provider)){
                     $this->Flash->success(__('Service Provider has been added successfully.'));
@@ -341,6 +466,9 @@ class UsersController extends AppController {
                 return $this->redirect(['action'=>'add_service_provider']);
             }
         }
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities'));
     }
 
     public function delete($id = null) {
@@ -377,13 +505,174 @@ class UsersController extends AppController {
 
     public function customer_view($id = null){
         $id = base64_decode($id);
-        $customer = $this->Users->get($id);
+        $this->loadModel('Cities');
+        $customer = $this->Users->find()->where(['Users.id'=>$id])->contain(['Cities'])->first();
         $this->set(compact('customer'));
     }
 
     public function service_provider_view($id = null){
         $id = base64_decode($id);
-        $service_provider = $this->Users->get($id);
+        $this->loadModel('Cities');
+        $service_provider = $this->Users->find()->where(['Users.id'=>$id])->contain(['Cities'])->first();
         $this->set(compact('service_provider'));
     }
+
+    public function subadmin_view($id = null){
+        $id = base64_decode($id);
+        $subadmin = $this->Users->get($id);
+        $this->set(compact('subadmin'));
+    }
+
+    public function edit_customer($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'myaccount']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Customer has been updated Successfully.'));
+                return $this->redirect(['action' => 'customer_list']);
+            }
+        }
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities', 'user'));
+    }
+
+    public function edit_service_provider($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'myaccount']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Service Provider has been updated Successfully.'));
+                return $this->redirect(['action' => 'service_provider_list']);
+            }
+        }
+        $this->loadModel('Cities');
+        $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
+        $this->set(compact('cities', 'user'));
+    }
+
+    public function edit_subadmin($id = null) {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $this->loadModel('LeftmenuList');
+        $leftmenu_list = $this->LeftmenuList->find()->where(['status'=>'active']);
+
+        $id = base64_decode($id);
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post','put'])) {
+            $name=trim($this->request->data['name']);
+            if (strpos($name, ' ') !== false) {
+                $this->request->data['firstName']=explode(' ', $name)[0];
+                $this->request->data['lastName']=explode(' ', $name)[1];
+            }else{
+                $this->request->data['firstName']=$name;
+            }
+            if($this->request->data['profilePicture']['name'] != '') {
+                $pathpart=pathinfo($this->request->data['profilePicture']['name']);
+                $arr_ext = array('jpg', 'jpeg', 'png');
+                $ext = $pathpart['extension'];
+                if (in_array($ext, $arr_ext)) {
+                    $uploadFolder = "userImg";
+                    $uploadPath = WWW_ROOT . $uploadFolder;
+                    $filename = uniqid().".".$ext;
+                    $full_flg_path = $uploadPath . '/' . $filename;
+                    move_uploaded_file($this->request->data['profilePicture']['tmp_name'],$full_flg_path);                        
+                    $this->request->data['profilePicture'] = "userImg/".$filename;
+                } else {
+                    $this->Flash->error(__('Upload image only jpg,jpeg,png files.'));
+                    return $this->redirect(['action'=>'subadmin_list']);
+                } 
+            } else {
+                $this->request->data['profilePicture'] = $this->request->data['oldimg'];
+            }
+
+            $leftmenuArr = $this->request->data['leftmenuid'];
+            $leftmenuString = '';
+            if(count($leftmenuArr)>0){
+                for ($i=0; $i <count($leftmenuArr) ; $i++) { 
+                    if($leftmenuString){
+                        $leftmenuString = $leftmenuString.','.$leftmenuArr[$i];
+                    } else {
+                        $leftmenuString = $leftmenuArr[$i];
+                    }
+                }
+            }
+
+            $this->request->data['subadmin_access_ids'] = $leftmenuString;
+
+            unset($this->request->data['oldimg']);
+            unset($this->request->data['name']);
+            $user = $this->Users->patchEntity($user, $this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('Sub Admin has been updated Successfully.'));
+                return $this->redirect(['action' => 'subadmin_list']);
+            }
+        }
+        $this->set(compact('user','leftmenu_list'));
+    }
+
+
+
+
+
 }

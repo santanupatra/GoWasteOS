@@ -19,6 +19,11 @@
 						                            <?php echo $this->Form->input('siteEmail',['class' => 'form-control email-text2','label'=>false,'id' => 'site-email','placeholder'=>'Site Email']); ?>
 						                            <p class="emailError2 error-message" ></p>
 						                        </div>
+                                                <div class="form-group">
+						                            <label for="site-email" class="control-label">Municipality Commission(%)</label>
+						                            <?php echo $this->Form->input('municipalityCharge',['class' => 'form-control email-text2','label'=>false,'placeholder'=>'Municipality Comission']); ?>
+						                            <p class="emailError2 error-message" ></p>
+						                        </div>
 						                        <div class="form-group">
                                                     <?php echo $this->Form->submit('Submit',['class'=>'btn btn-primary pull-right']); ?>
                                                 </div>

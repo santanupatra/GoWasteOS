@@ -26,7 +26,7 @@
 
                                                 <div class="form-group">
                                                     <label for="first-name" class="control-label">Phone</label>
-                                                    <?php echo $this->Form->input('phoneNumber',['class' => 'form-control character-text phone', 'label'=>false,'id' => 'phone','placeholder'=>'Phone']); ?>
+                                                    <?php echo $this->Form->input('phoneNumber',['class' => 'form-control', 'label'=>false,'id' => 'phone','placeholder'=>'Phone']); ?>
                                                     <p class="phoneError error-message"></p>
                                                 </div>
                                                 
@@ -34,6 +34,24 @@
                                                     <label for="email" class="control-label">Email</label>
                                                     <?php echo $this->Form->input('email',['class' => 'form-control email-text','label'=>false,'id' => 'email','placeholder'=>'Email']); ?>
                                                     <p class="emailError error-message"></p>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email" class="control-label">Address</label>
+                                                    <?php echo $this->Form->input('address',['class' => 'form-control email-text','label'=>false,'id' => 'address','placeholder'=>'Address', 'autocomplete'=>"on"]); ?>
+                                                    <p class="addressError error-message"></p>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email" class="control-label">Choose City</label>
+                                                    <select name="city_id" class="form-control" id="cityName">
+                                                        <option value="">City</option>
+                                                        <?php 
+                                                        foreach($cities as $city): ?>
+                                                        <option value="<?php echo $city['id']; ?>"><?php echo $city['name']; ?></option>
+                                                        <?php endforeach ?>
+                                                    </select>
+                                                    <p class="cityNameError error-message"></p>
                                                 </div>
                                                 
                                                 <div class="form-group">
@@ -64,7 +82,7 @@
 
     function validateForm() {
         var fName = $(".fName").val();
-        var phone = $(".phone").val();
+        var phone = $("#phone").val();
         var email = $(".email-text").val();
         if(fName == "") {
             $(".fNameError").text("Name can not be empty!"); 
@@ -94,8 +112,37 @@
                 $(".emailError").fadeOut();
             },1500);
             return false;
+        } else if (address == "") {
+            $(".addressError").text("Address can not be empty!"); 
+            $(".addressError").css('display','block');
+            setTimeout(function(){ 
+                $(".addressError").fadeOut();
+            },1500);
+            return false;
+        } else if (cityName == "") {
+            $(".cityNameError").text("City name can not be empty!"); 
+            $(".cityNameError").css('display','block');
+            setTimeout(function(){ 
+                $(".cityNameError").fadeOut();
+            },1500);
+            return false;
         } else {
             return true;
         }
     }
+</script>
+
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        initialize();
+    });
+</script>
+
+<script type="text/javascript">
+function initialize() {
+    var input = document.getElementById('address');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+}
+    google.maps.event.addDomListener(window, 'load', initialize);
 </script>

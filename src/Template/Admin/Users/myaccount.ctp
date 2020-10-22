@@ -34,7 +34,7 @@
                                                     <label for="image-upload" class="control-label">Image</label>
                                                     <?php echo $this->Form->input('profilePicture',['type' => 'file','label'=>false,'id'=>'image-upload']); ?>
                                                 </div>
-                                                <input type="hidden" name="oldimg" value="<?php echo $user['userImage']; ?>">
+                                                <input type="hidden" name="oldimg" value="<?php echo $user['profilePicture']; ?>">
                                                 <div class="form-group">
                                                     <?php if ($user['profilePicture'] != '') { ?>
                                                     <img src="<?php echo $this->Url->build('/'.$user->profilePicture); ?>" id="user-image" alt="User Image" class="show-image">

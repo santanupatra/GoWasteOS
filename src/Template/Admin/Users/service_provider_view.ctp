@@ -19,6 +19,13 @@
 												
 											</p>
 										</li>
+                                        <li>
+											<p>
+												<span class="title">Cmpany Name</span>
+												<span class="short-description"><?php echo $service_provider['company_name']; ?></span>
+												
+											</p>
+										</li>
 										
 										<li>
 											<p>
@@ -31,6 +38,20 @@
 											<p>
 												<span class="title">Email</span>
 												<span class="short-description"><?php echo $service_provider['email']; ?></span>
+												
+											</p>
+										</li>
+                                        <li>
+											<p>
+												<span class="title">Address</span>
+												<span class="short-description"><?php echo $service_provider['address']; ?></span>
+												
+											</p>
+										</li>
+                                        <li>
+											<p>
+												<span class="title">City</span>
+												<span class="short-description"><?php echo $service_provider['city']['name']; ?></span>
 												
 											</p>
 										</li>
