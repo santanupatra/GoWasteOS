@@ -85,14 +85,14 @@ class AccountsController extends AppController {
     //  * @param string $id
     //  * @return void
     //  */
-    public function delete($id = null) {
+    public function delete($id = null, $user_id=null) {
         $this->viewBuilder()->layout('admin');
         $this->loadModel('Users');
         $id = base64_decode($id);
         $account = $this->Accounts->get($id);
         if ($this->Accounts->delete($account)) {
             $this->Flash->success(__('Acount information has been deleted.'));
-            return $this->redirect(['action'=>'index']);           
+            return $this->redirect(['action'=>'index/'.$user_id]);           
         }else {
             $this->Flash->error(__('Acount information could not deleted. Please, try again.'));
         }

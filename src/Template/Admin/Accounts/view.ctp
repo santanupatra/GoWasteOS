@@ -39,7 +39,7 @@
                                                     </tr>
 
                                                     <tr>
-                                                        <th class="hidden-phone"><b>Total amount</b></th>
+                                                        <th class="hidden-phone"><b>Total Amount</b></th>
                                                         <td>₵<?php echo $account['total_amount_transferred']; ?></td>
                                                     </tr>
 
@@ -50,7 +50,7 @@
 
 
                                                     <tr>
-                                                        <th class="hidden-phone"><b><?php echo $account['user']['type']=="SP"?"Total revenue generated":"Total cost generated";?></b></th>
+                                                        <th class="hidden-phone"><b><?php echo $account['user']['type']=="SP"?"Total Revenue Generated":"Total Cost Generated";?></b></th>
                                                         <td>₵<?php echo $total;  ?></td>
                                                     </tr>
                                                 

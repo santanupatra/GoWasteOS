@@ -11,6 +11,7 @@
 									</div>
 								</div>
 								<div class="panel-body">
+                                <div class="col-sm-6"></div>
                                 <!-- <a href="<?php echo $this->Url->build(["controller"=>"Reviews", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Review</a> -->
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
@@ -68,10 +69,10 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-    	// $('#competitionTable').DataTable({
-    	// 	"paging": false,
-	    //     "info": false
-    	// });
-    	// $('#userTable_paginate').addClass('pull-right');
+    	$('#competitionTable').DataTable({
+    		"paging": false,
+	        "info": false
+    	});
+    	$('#userTable_paginate').addClass('pull-right');
 	});
 </script>

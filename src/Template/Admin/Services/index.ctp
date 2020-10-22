@@ -82,10 +82,10 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-    	// $('#competitionTable').DataTable({
-    	// 	"paging": false,
-	    //     "info": false
-    	// });
-    	// $('#userTable_paginate').addClass('pull-right');
+    	$('#competitionTable').DataTable({
+    		"paging": false,
+	        "info": false
+    	});
+    	$('#userTable_paginate').addClass('pull-right');
 	});
 </script>

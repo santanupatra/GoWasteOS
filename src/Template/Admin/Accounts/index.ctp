@@ -11,7 +11,7 @@
 									</div>
 								</div>
 								<div class="panel-body">
-                               
+                                <div class="col-sm-6"></div>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
 											<tr>
@@ -37,7 +37,7 @@
 												<td>₵<?php echo $account['total_amount_transferred']; ?></td>
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Accounts/view/'.base64_encode($account['id']).'/'.base64_encode($account['user_id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
-													<a href="<?php echo $this->Url->build('/admin/Accounts/delete/'.base64_encode($account['id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to delete this Review?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>
+													<a href="<?php echo $this->Url->build('/admin/Accounts/delete/'.base64_encode($account['id']).'/'.base64_encode($account['user_id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to delete this account information?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>
 												</td>
 											</tr>
 											<?php $n++; endforeach ?>
@@ -70,10 +70,10 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-    	// $('#competitionTable').DataTable({
-    	// 	"paging": false,
-	    //     "info": false
-    	// });
-    	// $('#userTable_paginate').addClass('pull-right');
+    	$('#competitionTable').DataTable({
+    		"paging": false,
+	        "info": false
+    	});
+    	$('#userTable_paginate').addClass('pull-right');
 	});
 </script>
