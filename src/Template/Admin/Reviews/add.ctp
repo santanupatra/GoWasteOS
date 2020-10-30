@@ -40,6 +40,17 @@
                                                 </div>
 
                                                 <div class="form-group">
+                                                    <label for="email" class="control-label">Booking Id</label>
+                                                    <select name="booking_id" class="form-control">
+                                                        <option value="">Choose Booking Id</option>
+                                                        <?php 
+                                                        foreach($bookings as $booking): ?>
+                                                        <option value="<?php echo $booking['id']; ?>"><?php echo $booking['view_id']; ?></option>
+                                                        <?php endforeach ?>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
                                                     
                                                     <label>Rating</label><br>
                                                     <div class="rate">

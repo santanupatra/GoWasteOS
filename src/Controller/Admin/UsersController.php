@@ -54,7 +54,7 @@ class UsersController extends AppController {
      *
      * @return void
      */
-    public function dashboard() {
+    public function dashboard_old() {
         $this->viewBuilder()->layout('admin');
         $this->loadModel('Users');
 
@@ -62,6 +62,50 @@ class UsersController extends AppController {
         $date = date('Y-m-d H:i:s');
         $activeClass = 'dashboard';
         $this->set(compact('users', 'date','activeClass'));
+    }
+
+    public function dashboard() {
+        $this->viewBuilder()->layout('admin');
+        $this->loadModel('Users');
+        $this->loadModel('Services');
+        $this->loadModel('Reviews');
+        $this->loadModel('Cities');
+        $this->loadModel('Bookings');
+
+        $users = $this->Users->find()->where(['isAdmin' => 0, 'isActive' => 1])->count();
+        $date = date('Y-m-d H:i:s');
+        $activeClass = 'dashboard';
+
+        $customers_count = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->count();
+        $service_providers_count = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->count();
+        $subadmin_count = $this->Users->find()->where(['type'=>'SA', 'isDeleted'=>0])->count();
+        $services_count = $this->Services->find()->count();
+        $reviews_count = $this->Reviews->find()->count();
+        $cities_count = $this->Cities->find()->count();
+        $bookings_count = $this->Bookings->find()->count();
+
+        $dashboard_count_arr = array(
+            'customers'=>$customers_count,
+            'service_providers'=>$service_providers_count,
+            'subadmin'=>$subadmin_count,
+            'services'=>$services_count,
+            'reviews'=>$reviews_count,
+            'cities'=>$cities_count,
+            'bookings'=>$bookings_count,
+        );
+
+        // $bookings = $this->Bookings->find()->order(['id'=>'desc'])->toArray();
+        $conn = $this->Bookings->getConnection();
+        $stmt = $conn->execute("SELECT count(booking_date) AS counted_leads, booking_date AS count_date FROM bookings
+                                 GROUP BY booking_date ORDER BY id DESC");
+        $bookings = $stmt->fetchAll('assoc');
+
+        $city_stmt = $conn->execute("SELECT t2.name ,count(t1.id) AS total_booking FROM bookings t1 
+                                    INNER JOIN cities t2 ON t1.service_provided_city_id = t2.id GROUP BY t2.name");
+        $city_bookings = $city_stmt->fetchAll('assoc');
+        
+        
+        $this->set(compact('users', 'date','activeClass','dashboard_count_arr','bookings','city_bookings'));
     }
 
     /**
@@ -231,8 +275,13 @@ class UsersController extends AppController {
 
     public function customer_list() {
         $this->viewBuilder()->layout('admin');
+        $status = @$this->request->query['status'];
+        if(@$status!=''){
+            $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0, 'isActive'=>$status])->order(['id'=>'desc']);
+        } else {
+            $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->order(['id'=>'desc']);
+        }
 
-        $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->order(['id'=>'desc']);
         $customers = $this->paginate($customers)->toArray();
 
         $this->set(compact('customers'));
@@ -240,10 +289,13 @@ class UsersController extends AppController {
 
     public function service_provider_list() {
         $this->viewBuilder()->layout('admin');
-
-        $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->order(['id'=>'desc']);
+        $status = @$this->request->query['status'];
+        if(@$status!=''){
+            $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0, 'isActive'=>$status])->order(['id'=>'desc']);
+        } else {
+            $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->order(['id'=>'desc']);
+        }
         $service_providers = $this->paginate($service_providers)->toArray();
-
         $this->set(compact('service_providers'));
     }
 
@@ -264,7 +316,7 @@ class UsersController extends AppController {
         $sub_admin = $this->Users->newEntity();
         if ($this->request->is('post')) {
              
-            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isDeleted'=>0])->first();
             if(empty($duplicate)){
                 $name=trim($this->request->data['name']);
                 if (strpos($name, ' ') !== false) {
@@ -332,15 +384,15 @@ class UsersController extends AppController {
         
         if ($this->request->is('post')) {
              
-            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isDeleted'=>0])->first();
             if(empty($duplicate)){
-                $name=trim($this->request->data['name']);
-                if (strpos($name, ' ') !== false) {
-                    $this->request->data['firstName']=explode(' ', $name)[0];
-                    $this->request->data['lastName']=explode(' ', $name)[1];
-                }else{
-                    $this->request->data['firstName']=$name;
-                }
+                // $name=trim($this->request->data['name']);
+                // if (strpos($name, ' ') !== false) {
+                //     $this->request->data['firstName']=explode(' ', $name)[0];
+                //     $this->request->data['lastName']=explode(' ', $name)[1];
+                // }else{
+                //     $this->request->data['firstName']=$name;
+                // }
                 if($this->request->data['profilePicture']['name'] != '') {
                     $pathpart=pathinfo($this->request->data['profilePicture']['name']);
                     $arr_ext = array('jpg', 'jpeg', 'png');
@@ -381,15 +433,15 @@ class UsersController extends AppController {
         $service_provider = $this->Users->newEntity();
         if ($this->request->is('post')) {
              
-            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isActive'=>1, 'isDeleted'=>0])->first();
+            $duplicate = $this->Users->find()->where(['email'=>$this->request->data['email'], 'isDeleted'=>0])->first();
             if(empty($duplicate)){
-                $name=trim($this->request->data['name']);
-                if (strpos($name, ' ') !== false) {
-                    $this->request->data['firstName']=explode(' ', $name)[0];
-                    $this->request->data['lastName']=explode(' ', $name)[1];
-                }else{
-                    $this->request->data['firstName']=$name;
-                }
+                // $name=trim($this->request->data['name']);
+                // if (strpos($name, ' ') !== false) {
+                //     $this->request->data['firstName']=explode(' ', $name)[0];
+                //     $this->request->data['lastName']=explode(' ', $name)[1];
+                // }else{
+                //     $this->request->data['firstName']=$name;
+                // }
                 if($this->request->data['profilePicture']['name'] != '') {
                     $pathpart=pathinfo($this->request->data['profilePicture']['name']);
                     $arr_ext = array('jpg', 'jpeg', 'png');
@@ -476,7 +528,14 @@ class UsersController extends AppController {
     public function subadmin_view($id = null){
         $id = base64_decode($id);
         $subadmin = $this->Users->get($id);
-        $this->set(compact('subadmin'));
+        $this->loadModel('LeftmenuList');
+        $leftmenu_list = explode(',',$subadmin['subadmin_access_ids']);
+        $leftmenu=array();
+        foreach ($leftmenu_list as $key => $value) {
+            $lm = $this->LeftmenuList->find()->where(['status'=>'active', 'id'=>$value])->first();
+            array_push($leftmenu,$lm['name']);          
+        }
+        $this->set(compact('subadmin', 'leftmenu'));
     }
 
     public function edit_customer($id = null) {
@@ -485,13 +544,13 @@ class UsersController extends AppController {
         $id = base64_decode($id);
         $user = $this->Users->get($id);
         if ($this->request->is(['post','put'])) {
-            $name=trim($this->request->data['name']);
-            if (strpos($name, ' ') !== false) {
-                $this->request->data['firstName']=explode(' ', $name)[0];
-                $this->request->data['lastName']=explode(' ', $name)[1];
-            }else{
-                $this->request->data['firstName']=$name;
-            }
+            // $name=trim($this->request->data['name']);
+            // if (strpos($name, ' ') !== false) {
+            //     $this->request->data['firstName']=explode(' ', $name)[0];
+            //     $this->request->data['lastName']=explode(' ', $name)[1];
+            // }else{
+            //     $this->request->data['firstName']=$name;
+            // }
             if($this->request->data['profilePicture']['name'] != '') {
                 $pathpart=pathinfo($this->request->data['profilePicture']['name']);
                 $arr_ext = array('jpg', 'jpeg', 'png');
@@ -511,7 +570,7 @@ class UsersController extends AppController {
                 $this->request->data['profilePicture'] = $this->request->data['oldimg'];
             }
             unset($this->request->data['oldimg']);
-            unset($this->request->data['name']);
+            //unset($this->request->data['name']);
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('Customer has been updated Successfully.'));
@@ -529,13 +588,13 @@ class UsersController extends AppController {
         $id = base64_decode($id);
         $user = $this->Users->get($id);
         if ($this->request->is(['post','put'])) {
-            $name=trim($this->request->data['name']);
-            if (strpos($name, ' ') !== false) {
-                $this->request->data['firstName']=explode(' ', $name)[0];
-                $this->request->data['lastName']=explode(' ', $name)[1];
-            }else{
-                $this->request->data['firstName']=$name;
-            }
+            // $name=trim($this->request->data['name']);
+            // if (strpos($name, ' ') !== false) {
+            //     $this->request->data['firstName']=explode(' ', $name)[0];
+            //     $this->request->data['lastName']=explode(' ', $name)[1];
+            // }else{
+            //     $this->request->data['firstName']=$name;
+            // }
             if($this->request->data['profilePicture']['name'] != '') {
                 $pathpart=pathinfo($this->request->data['profilePicture']['name']);
                 $arr_ext = array('jpg', 'jpeg', 'png');
@@ -555,7 +614,7 @@ class UsersController extends AppController {
                 $this->request->data['profilePicture'] = $this->request->data['oldimg'];
             }
             unset($this->request->data['oldimg']);
-            unset($this->request->data['name']);
+            //unset($this->request->data['name']);
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('Service Provider has been updated Successfully.'));

@@ -11,6 +11,11 @@
 									</div>
 								</div>
 								<div class="panel-body">
+									<div class="row">
+										<a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"customer_list"]); ?>" >
+											<button type="button" class="btn-primary pull-right">Go Back</button>
+										</a>
+									</div>
 									<ul class="list-unstyled todo-list">
                                     <li>
 											<p>

@@ -19,9 +19,15 @@
                                         <div class="panel">
                                             <div class="panel-body">
                                                 <div class="form-group">
-                                                    <label for="first-name" class="control-label">Name</label>
-                                                    <?php echo $this->Form->input('name',['class' => 'form-control character-text fName','value'=>$user['firstName'].' '.$user['lastName'], 'label'=>false,'id' => 'first-name','placeholder'=>'Name']); ?>
+                                                    <label for="first-name" class="control-label">First Name</label>
+                                                    <?php echo $this->Form->input('firstName',['class' => 'form-control character-text fName', 'label'=>false,'id' => 'first-name','placeholder'=>'First Name']); ?>
                                                     <p class="fNameError error-message"></p>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="first-name" class="control-label">Last Name</label>
+                                                    <?php echo $this->Form->input('lastName',['class' => 'form-control character-text lName', 'label'=>false,'id' => 'last-name','placeholder'=>'Last Name']); ?>
+                                                    <p class="lNameError error-message"></p>
                                                 </div>
 
                                                 <div class="form-group">
@@ -90,13 +96,21 @@
 
     function validateForm() {
         var fName = $(".fName").val();
+        var lName = $(".fName").val();
         var phone = $("#phone").val();
         var email = $(".email-text").val();
         if(fName == "") {
-            $(".fNameError").text("Name can not be empty!"); 
+            $(".fNameError").text("First Name can not be empty!"); 
             $(".fNameError").css('display','block');
             setTimeout(function(){ 
                 $(".fNameError").fadeOut();
+            },1500);
+            return false;
+        }else if(lName == "") {
+            $(".lNameError").text("Last Name can not be empty!"); 
+            $(".lNameError").css('display','block');
+            setTimeout(function(){ 
+                $(".lNameError").fadeOut();
             },1500);
             return false;
         } else if (phone == "") {

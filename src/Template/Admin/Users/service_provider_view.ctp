@@ -1,16 +1,25 @@
 <div class="container-fluid">
 					<div class="row">
+
 						
 						<div class="col-md-12">
-							<!-- TABLE HOVER -->
+							
+							<!-- TABLE HOV2R -->
 							<div class="panel widget">
+
 								<div class="panel-heading widget-title">
 									<h3 class="panel-title">Service Provider Details</h3>
 									<div class="right">
+
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
 								</div>
 								<div class="panel-body">
+									<div class="row">
+										<a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"service_provider_list"]); ?>" >
+											<button type="button" class="btn-primary pull-right">Go Back</button>
+										</a>
+									</div>
 									<ul class="list-unstyled todo-list">
 										<li>
 											<p>
@@ -21,7 +30,7 @@
 										</li>
                                         <li>
 											<p>
-												<span class="title">Cmpany Name</span>
+												<span class="title">Company Name</span>
 												<span class="short-description"><?php echo $service_provider['company_name']; ?></span>
 												
 											</p>

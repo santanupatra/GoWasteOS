@@ -10,8 +10,11 @@
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
 								</div>
+                                
 								<div class="panel-body">
+                            
                                         <div class="table-responsive">
+                                        <!-- <a href="<?php echo $this->Url->build('/admin/Bookings/report/'.base64_encode($booking['id'])); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Generate Pdf</a> -->
                                             <table class="table table-striped table-bordered table-hover" id="sample_" style="width:75%">
 
                                                 
@@ -49,7 +52,7 @@
                                                     </tr>
                                                     <tr>
                                                         <th class="hidden-phone"><b>Booking Date</b></th>
-                                                        <td><?php echo gmdate('M d, Y h:i A',strtotime($booking['booking_date'])); ?></td>
+                                                        <td><?php echo gmdate('M d, Y',strtotime($booking['booking_date'])); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th class="hidden-phone"><b>Booking Time</b></th>

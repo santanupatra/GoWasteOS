@@ -18,6 +18,7 @@
 								<th>SL No.</th>
 								<th>Name</th>
 								<th>Email</th>
+								<th>Phone</th>
 								<th>Status</th>
 								<th>Actions</th>
 							</tr>
@@ -29,6 +30,7 @@
 								<td><?php echo '#'.$n; ?></td>
 								<td><?php echo $row_list['firstName'].' '.$row_list['lastName']; ?></td>
 								<td><?php echo $row_list['email']; ?></td>
+								<td><?php echo $row_list['phoneNumber']; ?></td>
 								<td>
 									<?php if($row_list['isActive']==1) { ?>
 									<img src="<?php echo $this->Url->build('/img/success.png'); ?>" class="status-image" />

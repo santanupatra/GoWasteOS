@@ -5,21 +5,30 @@
 							<!-- TABLE HOVER -->
 							<div class="panel widget">
 								<div class="panel-heading widget-title">
-									<h3 class="panel-title">Review List</h3>
+									<h3 class="panel-title">Customer To Service Provider</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
 								</div>
 								<div class="panel-body">
-                                <div class="col-sm-6"></div>
                                 <!-- <a href="<?php echo $this->Url->build(["controller"=>"Reviews", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Review</a> -->
+                            	<select style="margin-left: 2px;" class="btn btn-info pull-right" onchange="ratingfilter(this.value)" >
+									<option value="">Filter by Rating</option>
+									<option value="1">1 star</option>
+									<option value="2">2 star</option>
+									<option value="3">3 star</option>
+									<option value="4">4 star</option>
+									<option value="5">5 star</option>
+								</select>
+                                <div class="col-sm-6"></div>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
 											<tr>
 												<th>SR No.</th>
-												<th>Review Given To</th>
 												<th>Review Given By</th>
+                                                <th>Review Given To</th>												
 												<th>Rating</th>
+												<th>Booking Id</th>
 												<th>Date</th>
 												<th>Actions</th>
 											</tr>
@@ -30,10 +39,11 @@
                                             //pr($review)?>
 											<tr>
                                                 <td><?php echo '#'.$n; ?></td>
+                                                <td><?php echo $review['reviewer']['firstName'].' '.$review['reviewer']['lastName']; ?></td>
                                                 <td><?php echo $review['reviewd']['firstName'].' '.$review['reviewd']['lastName']; ?></td>
-												<td><?php echo $review['reviewer']['firstName'].' '.$review['reviewer']['lastName']; ?></td>
 												<td><?php echo $review['rating']; ?></td>
-												<td><?php echo gmdate('M d, Y h:i A',strtotime($review['created_date'])); ?></td>
+												<td><?php echo $review['booking']['view_id']; ?></td>
+												<td><?php echo gmdate('d/m/Y',strtotime($review['created_date'])); ?></td>
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Reviews/view/'.base64_encode($review['id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
 													<a href="<?php echo $this->Url->build('/admin/Reviews/delete/'.base64_encode($review['id']).'/'.base64_encode($review['to_id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to delete this Review?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>
@@ -75,4 +85,9 @@
     	});
     	$('#userTable_paginate').addClass('pull-right');
 	});
+	function ratingfilter(value){
+		if(value){
+			window.location.href='<?php echo $this->Url->build(["controller"=>"Reviews", "action"=>"index"]); ?>?rating='+value;
+		}
+	}
 </script>

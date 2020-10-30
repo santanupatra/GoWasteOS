@@ -11,8 +11,16 @@
 									</div>
 								</div>
 								<div class="panel-body">
-                                <div class="col-sm-6"></div>
-                                 <!-- <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a>  -->
+									<select name="city_id" style="margin-left: 2px;" class="btn btn-info pull-right" id="filtercityid" onchange="cityfilter(this.value)" >
+										<option value="">Filter by city</option>
+										<?php foreach($cities as $city){ ?>
+											<option value="<?php echo $city['id']; ?>" <?php if($city['id']==$cityid){echo 'selected';} ?>>
+												<?php echo $city['name']; ?>
+											</option>
+										<?php } ?>
+									</select>
+                                 <a href="<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Booking</a> 
+                                 <div class="col-sm-6"></div>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
 											<tr>
@@ -34,7 +42,7 @@
 											<tr>
                                                 <td><?php echo '#'.$n; ?></td>
                                                 <td><?php echo $booking['view_id']; ?></td>
-												<td><?php echo date("d/m/Y", strtotime($booking['booking_date'])); ?></td>
+												<td><?php echo date("d/m/Y",strtotime($booking['booking_date'])); ?></td>
 												<td><?php echo date("h:i A",strtotime($booking['booking_time'])); ?></td>
 												<td><?php echo $booking['service_status']=="P"?"Pending":($booking['service_status']=="C&R"?"Cancel & Refunded":"Completed");?></td>
 												<td><?php echo $booking['payment_status']==1?"Paid":"UnPaid";  ?></td>
@@ -81,4 +89,10 @@
     	});
     	$('#userTable_paginate').addClass('pull-right');
 	});
+
+	function cityfilter(value){
+		if(value){
+			window.location.href='<?php echo $this->Url->build(["controller"=>"Bookings", "action"=>"index"]); ?>?cityid='+value;
+		}
+	}
 </script>

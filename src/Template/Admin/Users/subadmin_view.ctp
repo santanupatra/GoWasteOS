@@ -11,6 +11,14 @@
 									</div>
 								</div>
 								<div class="panel-body">
+									<div class="row">
+										<a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"subadmin_list"]); ?>" >
+											<button type="button" class="btn-primary pull-right">Go Back</button>
+										</a>
+									</div>
+									<?php 
+									//print_r();
+									//echo "<pre>"; print_r($leftmenu_list); echo "</pre>"; ?>
 									<ul class="list-unstyled todo-list">
 										<li>
 											<p>
@@ -31,6 +39,13 @@
 											<p>
 												<span class="title">Email</span>
 												<span class="short-description"><?php echo $subadmin['email']; ?></span>
+												
+											</p>
+										</li>
+										<li>
+											<p>
+												<span class="title">Access Provided</span>
+												<span class="short-description"><?php echo implode(', ',$leftmenu); ?></span>
 												
 											</p>
 										</li>

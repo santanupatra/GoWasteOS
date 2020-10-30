@@ -28,6 +28,11 @@
                                                     </tr>
 
                                                     <tr>
+                                                        <th class="hidden-phone"><b>Booking Id</b></th>
+                                                        <td><?php echo $review['booking']['view_id'];  ?></td>
+                                                    </tr>
+
+                                                    <tr>
                                                         <th class="hidden-phone"><b>Review Given By</b></th>
                                                         <td><?php echo $review['reviewer']['firstName'].' '.$review['reviewer']['lastName'];  ?></td>
                                                     </tr>

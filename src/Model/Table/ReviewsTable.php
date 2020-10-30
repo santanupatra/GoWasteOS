@@ -18,6 +18,10 @@ class ReviewsTable extends Table {
             'className' => 'Users',
             'foreignKey' => 'from_id'
         ]);
+        $this->belongsTo('Bookings', [
+            'className' => 'Bookings',
+            'foreignKey' => 'booking_id'
+        ]);
 
     
     }

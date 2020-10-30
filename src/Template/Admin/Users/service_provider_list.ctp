@@ -11,6 +11,12 @@
 									</div>
 								</div>
 								<div class="panel-body">
+									
+									<select style="margin-left: 2px;" class="btn btn-info pull-right" onchange="statusfilter(this.value)" >
+										<option value="">Filter by Status</option>
+										<option value="1">Active</option>
+										<option value="0">Inactive</option>
+									</select>
 									<a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"add_service_provider"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Service Provider</a>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">
 										<thead>
@@ -18,6 +24,7 @@
 												<th>SR No.</th>
 												<th>Service Provider Name</th>
 												<th>Service Provider Email</th>
+												<th>Date of joining</th>
 												<th>Status</th>
 												<th>Actions</th>
 											</tr>
@@ -29,6 +36,7 @@
 												<td><?php echo '#'.$n; ?></td>
 												<td><?php echo $service_provider['firstName'].' '.$service_provider['lastName']; ?></td>
 												<td><?php echo $service_provider['email']; ?></td>
+												<td><?php echo date("d/m/Y", strtotime($service_provider['createdDate'])); ?></td>
 												<td>
 													<?php if($service_provider['isActive']==1) { ?>
 													<img src="<?php echo $this->Url->build('/img/success.png'); ?>" class="status-image" />
@@ -80,4 +88,9 @@
     	});
     	$('#userTable_paginate').addClass('pull-right');
 	});
+	function statusfilter(value){
+		if(value){
+			window.location.href='<?php echo $this->Url->build(["controller"=>"Users", "action"=>"service_provider_list"]); ?>?status='+value;
+		}
+	}
 </script>

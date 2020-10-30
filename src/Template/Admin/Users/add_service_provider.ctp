@@ -19,9 +19,14 @@
                                         <div class="panel">
                                             <div class="panel-body">
                                                 <div class="form-group">
-                                                    <label for="first-name" class="control-label">Name</label>
-                                                    <?php echo $this->Form->input('name',['class' => 'form-control character-text fName', 'label'=>false,'id' => 'first-name','placeholder'=>'Name']); ?>
+                                                    <label for="first-name" class="control-label">First Name</label>
+                                                    <?php echo $this->Form->input('firstName',['class' => 'form-control character-text fName', 'label'=>false,'id' => 'first-name','placeholder'=>'First Name']); ?>
                                                     <p class="fNameError error-message"></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="first-name" class="control-label">Last Name</label>
+                                                    <?php echo $this->Form->input('lastName',['class' => 'form-control character-text lName', 'label'=>false,'id' => 'last-name','placeholder'=>'Last Name']); ?>
+                                                    <p class="lNameError error-message"></p>
                                                 </div>
 
                                                 <div class="form-group">
@@ -40,6 +45,11 @@
                                                     <label for="email" class="control-label">Email</label>
                                                     <?php echo $this->Form->input('email',['class' => 'form-control email-text','label'=>false,'id' => 'email','placeholder'=>'Email']); ?>
                                                     <p class="emailError error-message"></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email" class="control-label">Password</label>
+                                                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" >
+                                                    <p class="passwordError error-message"></p>
                                                 </div>
 
                                                 <?php echo $this->Form->input('type',['type'=>'hidden','class' => 'form-control email-text','label'=>false, 'value'=>'SP']); ?>
@@ -90,15 +100,24 @@
 
     function validateForm() {
         var fName = $(".fName").val();
+        var lName = $(".lName").val();
         var phone = $("#phone").val();
         var address = $("#address").val();
         var cityName = $("#cityName").val();
         var email = $(".email-text").val();
+        var password = $("#password").val();
         if(fName == "") {
-            $(".fNameError").text("Name can not be empty!"); 
+            $(".fNameError").text("First Name can not be empty!"); 
             $(".fNameError").css('display','block');
             setTimeout(function(){ 
                 $(".fNameError").fadeOut();
+            },1500);
+            return false;
+        }else if(lName == "") {
+            $(".lNameError").text("Last Name can not be empty!"); 
+            $(".lNameError").css('display','block');
+            setTimeout(function(){ 
+                $(".lNameError").fadeOut();
             },1500);
             return false;
         } else if (phone == "") {
@@ -120,6 +139,13 @@
             $(".emailError").css('display','block');
             setTimeout(function(){ 
                 $(".emailError").fadeOut();
+            },1500);
+            return false;
+        } else if (password == "") {
+            $(".passwordError").text("Password can not be empty!"); 
+            $(".passwordError").css('display','block');
+            setTimeout(function(){ 
+                $(".passwordError").fadeOut();
             },1500);
             return false;
         } else if (address == "") {

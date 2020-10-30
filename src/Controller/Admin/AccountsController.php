@@ -42,41 +42,50 @@ class AccountsController extends AppController {
      *
      * @return void
      */
-    // public function add() {
-    //     $this->viewBuilder()->layout('admin');
-    //     $this->loadModel('Users');
-    //     $review = $this->Reviews->newEntity();
-    //     if ($this->request->is('post')) {
-    //         $review = $this->Reviews->patchEntity($review, $this->request->data);
-    //         $result = $this->Reviews->save($review);
-    //     	if ($result) {
-    //             $reviewsAll = $this->Reviews->find()->where(['is_active'=>1, 'to_id'=>$this->request->data['to_id']])->toArray();
-    //             $avgRating=0;
-    //             $reviewCount=0;
-    //             if(!empty($reviewsAll)){
-    //                 foreach ($reviewsAll as $key => $value) {
-    //                     $reviewCount+=$value['rating'];
-    //                 }
-    //                 $avgRating=$reviewCount/count($reviewsAll);
-    //             }
+    public function customer($id=null) {
+        $this->viewBuilder()->layout('admin');
+        $id=base64_decode($id);
+        $accounts = $this->Accounts->find()->where(['Accounts.user_type' => 'C'])->contain(['Users'])->group(['Accounts.user_id'])
+        ->order(['Accounts.id' => 'DESC']);
+        $this->set('accounts', $this->paginate($accounts));
+    }
+    public function service_provider($id=null) {
+        $this->viewBuilder()->layout('admin');
+        $id=base64_decode($id);
+        $accounts = $this->Accounts->find()->where(['Accounts.user_type' => 'SP'])->contain(['Users'])->group(['Accounts.user_id'])
+        ->order(['Accounts.id' => 'DESC']);
+        $this->set('accounts', $this->paginate($accounts));
+    }
 
-    //             $userEdit = $this->Users->get($this->request->data['to_id']);
-    //             $status=array();
-    //             $status['rating']=$avgRating;
-    //             $userEdit = $this->Users->patchEntity($userEdit, $status);
-    //             if($this->Users->save($userEdit)){
-    //                 $this->Flash->success(__('Rating has been added successfully.'));
-    //                 return $this->redirect(['action'=>'index']);
-    //             }        
-                
-    //     	} else {
-    //     		$this->Flash->error(__('Rating could not added. Please, try again.'));
-    //     	}
-    //     }
+    public function getAmount(){
 
-    //     $users = $this->Users->find()->where(['isActive'=>1, 'isAdmin'=>0])->order(['id'=>'DESC'])->toArray();
-    //     $this->set(compact('users'));
-    // }
+        return "aa";
+       // echo "bbbb";//$user_id = $this->params['user_id']; 
+       // exit();
+        // $this->viewBuilder()->layout('admin');
+        // $user_id = base64_decode($user_id);
+        // $debitAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$user_id, 'transaction_type'=>'D'])->toArray();
+        // $creditAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$user_id, 'transaction_type'=>'C'])->toArray();
+        // $debit=0;
+        // $credit=0;
+        // $total=0;
+        // if(!empty($debitAll)){
+        //     foreach ($debitAll as $key => $value) {
+        //         $debit+=$value['total_amount_transferred'];
+        //     }
+        // }
+        // if(!empty($creditAll)){
+        //     foreach ($creditAll as $key => $value) {
+        //         $credit+=$value['total_amount_transferred'];
+        //     }
+        // }
+        // if($debit>$credit){
+        //     $total=$debit-$credit;
+        // }else{
+        //     $total=$credit-$debit;
+        // }
+        // return $total;
+    }
 
 
     // /**
