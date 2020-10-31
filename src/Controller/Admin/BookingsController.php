@@ -31,12 +31,10 @@ class BookingsController extends AppController {
      */
     public function index() {
         $this->viewBuilder()->layout('admin');
-
         $this->loadModel('Cities');
-
         $cityid = @$this->request->query['cityid'];
         $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
-        
+    
         if(@$cityid!=''){
             $bookings = $this->Bookings->find()->where(['service_provided_city_id'=>$cityid])->contain(['Payments', 'Services', 'Cities', 'Providers', 'Customers'])
                     ->order(['Bookings.id' => 'DESC']);
@@ -44,11 +42,7 @@ class BookingsController extends AppController {
             $bookings = $this->Bookings->find()->contain(['Payments', 'Services', 'Cities', 'Providers', 'Customers'])
                     ->order(['Bookings.id' => 'DESC']);
         }
-
         $bookings = $this->paginate($bookings);
-
-        // print_r($this->paginate($bookings));
-        // exit();
         $this->set(compact('bookings','cities','cityid'));
     }
 
