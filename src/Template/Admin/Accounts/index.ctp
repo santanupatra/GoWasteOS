@@ -5,7 +5,7 @@
 							<!-- TABLE HOVER -->
 							<div class="panel widget">
 								<div class="panel-heading widget-title">
-									<h3 class="panel-title">Financial Account</h3>
+									<h3 class="panel-title">Transaction History</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
@@ -32,9 +32,9 @@
                                                 <td><?php echo '#'.$n; ?></td>
                                                 <td><?php echo $account['booking_view_id']; ?></td>
 												<td><?php echo $account['transaction_type']=="D"?"Debit":"Credit"; ?></td>
-												<td>₵<?php echo $account['total_service_charge']; ?></td>
-												<td><?php echo "₵".$account['municipality_charge']; ?></td>
-												<td>₵<?php echo $account['total_amount_transferred']; ?></td>
+												<td>₦ <?php echo $account['total_service_charge']; ?></td>
+												<td><?php echo "₦ ".$account['municipality_charge']; ?></td>
+												<td>₦ <?php echo $account['total_amount_transferred']; ?></td>
 												<td>
 													<a href="<?php echo $this->Url->build('/admin/Accounts/view/'.base64_encode($account['id']).'/'.base64_encode($account['user_id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
 													<a href="<?php echo $this->Url->build('/admin/Accounts/delete/'.base64_encode($account['id']).'/'.base64_encode($account['user_id'])); ?>" class="btn btn-danger btn-xs gap-btn" onclick="return confirm('Are you sure you want to delete this account information?')"><i class="fa fa-times edit-tag-icon" ></i> Delete</a>

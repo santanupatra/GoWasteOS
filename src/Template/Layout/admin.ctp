@@ -23,10 +23,12 @@
 	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
 	<link rel="icon" type="image/png" sizes="96x96" href="<?php echo $this->Url->build('/'.$setting['fav_icon']); ?>">
 
-	<!-- Javascript -->
+    <!-- Javascript -->
+    
 	<script src="<?php echo $this->Url->build('/'); ?>assets/vendor/jquery/jquery.min.js"></script>
 	<script src="<?php echo $this->Url->build('/'); ?>assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
 
 	<script src="<?php echo $this->Url->build('/'); ?>assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 	<script src="<?php echo $this->Url->build('/'); ?>assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
@@ -46,10 +48,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"> -->
 
+    <!-- 
+
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.css" /> -->
 
     <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyCbMTT2CVS2GbGwOF-v8M4Umy_TG_qsu0M" type="text/javascript"></script>
 </head>
@@ -140,6 +143,7 @@
     <script type="text/javascript">
         $('#phone').mask('(000) 000-0000');
     </script>
+
 	
 </body>
 

@@ -13,6 +13,7 @@ use Cake\Network\Exception\NotFoundException;
  *
  */
 class AccountsController extends AppController {
+
     
     public function beforeFilter(Event $event) {
         if (!$this->request->session()->check('Auth.Admin')) {
@@ -21,7 +22,7 @@ class AccountsController extends AppController {
     }
 
     public $paginate = [
-        'limit' => 15
+        'limit' => 9
     ];
 
     /**
@@ -47,44 +48,85 @@ class AccountsController extends AppController {
         $id=base64_decode($id);
         $accounts = $this->Accounts->find()->where(['Accounts.user_type' => 'C'])->contain(['Users'])->group(['Accounts.user_id'])
         ->order(['Accounts.id' => 'DESC']);
+        $debits=array();
+        $credits=array();
+        $totals=array();
+        $user=array();
+        foreach ($this->paginate($accounts) as $key => $value) {
+            array_push($user,$value['user_id']);
+        }
+        foreach ($user as $key => $value) {
+            $debitAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$value, 'transaction_type'=>'D'])->toArray();
+            $creditAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$value, 'transaction_type'=>'C'])->toArray();
+            $debit=0;
+            $credit=0;
+            $total=0;
+            if(!empty($debitAll)){
+                foreach ($debitAll as $key => $value) {
+                    $debit+=$value['total_amount_transferred'];
+                }
+            }
+            if(!empty($creditAll)){
+                foreach ($creditAll as $key => $value) {
+                    $credit+=$value['total_amount_transferred'];
+                }
+            }
+            if($debit>$credit){
+                $total=$debit-$credit;
+            }else{
+                $total=$credit-$debit;
+            }
+
+            array_push($debits,$debit);
+            array_push($credits,$credit);
+            array_push($totals,$total);
+
+        }
         $this->set('accounts', $this->paginate($accounts));
+        $this->set(compact('debits', 'credits', 'totals'));
     }
     public function service_provider($id=null) {
         $this->viewBuilder()->layout('admin');
         $id=base64_decode($id);
         $accounts = $this->Accounts->find()->where(['Accounts.user_type' => 'SP'])->contain(['Users'])->group(['Accounts.user_id'])
         ->order(['Accounts.id' => 'DESC']);
+        
+        $debits=array();
+        $credits=array();
+        $totals=array();
+        $user=array();
+        foreach ($this->paginate($accounts) as $key => $value) {
+            array_push($user,$value['user_id']);
+        }
+        foreach ($user as $key => $value) {
+            $debitAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$value, 'transaction_type'=>'D'])->toArray();
+            $creditAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$value, 'transaction_type'=>'C'])->toArray();
+            $debit=0;
+            $credit=0;
+            $total=0;
+            if(!empty($debitAll)){
+                foreach ($debitAll as $key => $value) {
+                    $debit+=$value['total_amount_transferred'];
+                }
+            }
+            if(!empty($creditAll)){
+                foreach ($creditAll as $key => $value) {
+                    $credit+=$value['total_amount_transferred'];
+                }
+            }
+            if($debit>$credit){
+                $total=$debit-$credit;
+            }else{
+                $total=$credit-$debit;
+            }
+
+            array_push($debits,$debit);
+            array_push($credits,$credit);
+            array_push($totals,$total);
+
+        }
         $this->set('accounts', $this->paginate($accounts));
-    }
-
-    public function getAmount(){
-
-        return "aa";
-       // echo "bbbb";//$user_id = $this->params['user_id']; 
-       // exit();
-        // $this->viewBuilder()->layout('admin');
-        // $user_id = base64_decode($user_id);
-        // $debitAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$user_id, 'transaction_type'=>'D'])->toArray();
-        // $creditAll = $this->Accounts->find()->where(['is_active'=>1, 'user_id'=>$user_id, 'transaction_type'=>'C'])->toArray();
-        // $debit=0;
-        // $credit=0;
-        // $total=0;
-        // if(!empty($debitAll)){
-        //     foreach ($debitAll as $key => $value) {
-        //         $debit+=$value['total_amount_transferred'];
-        //     }
-        // }
-        // if(!empty($creditAll)){
-        //     foreach ($creditAll as $key => $value) {
-        //         $credit+=$value['total_amount_transferred'];
-        //     }
-        // }
-        // if($debit>$credit){
-        //     $total=$debit-$credit;
-        // }else{
-        //     $total=$credit-$debit;
-        // }
-        // return $total;
+        $this->set(compact('debits', 'credits', 'totals'));
     }
 
 

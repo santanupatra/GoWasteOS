@@ -20,7 +20,27 @@
                                                     <p class="pNameError error-message"></p>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="page-name" class="control-label">Price per ton in Cent</label>
+                                                    <label for="email" class="control-label">Choose Unit of Waste Size</label>
+                                                    <select name="unit" class="form-control" id="unit">
+                                                        <option value="">Unit</option>                                         
+                                                        <option value="Tons">Tons</option>
+                                                        <option value="Liters">Liters</option>                                                    
+                                                    </select>
+                                                    <p class="unitNameError error-message"></p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="email" class="control-label">Choose City</label>
+                                                    <select name="city_id[]" multiple="multiple" class="form-control select2" id="city_id">
+                                                        <option value="">City</option>
+                                                        <?php 
+                                                        foreach($cities as $city): ?>
+                                                        <option value="<?php echo $city['id']; ?>"><?php echo $city['name']; ?></option>
+                                                        <?php endforeach ?>
+                                                    </select>
+                                                    <p class="cityNameError error-message"></p>
+                                                </div>
+                                                <!-- <div class="form-group">
+                                                    <label for="page-name" class="control-label">Price per ton in NGN</label>
                                                     <?php echo $this->Form->input('price',['type'=>'number','class' => 'form-control priceName','label'=>false,'placeholder'=>'Price','id' => 'priceName']); ?>
                                                     <p class="priceNameError error-message"></p>
                                                 </div>
@@ -30,14 +50,14 @@
                                                 </div>
                                                 <div class="form-group">                                                    
                                                     <img src="<?php echo $this->Url->build('/service_image/no-image.png'); ?>" id="user-image"  class="show-image">
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="form-group">
+                                                <!-- <div class="form-group">
                                                     <label for="description" class="control-label">Content</label>
                                                     <?php echo $this->Form->input('content',['class' => 'form-control','label'=>false,'id' => 'description','placeholder'=>'Description','type'=>'textarea']); ?>
                                                     <p class="descriptionError error-message"></p>
-                                                </div>
+                                                </div> -->
 						                        <div class="form-group">
                                                     <?php echo $this->Form->submit('Submit',['class'=>'btn btn-primary pull-right']); ?>
                                                 </div>
@@ -57,8 +77,10 @@
 
     function validateForm () {
         var pName = $('.pName').val();
-    	var price = $('.priceName').val();
-    	var description = $("#description").val();
+        var unit = $('#unit').val();
+        var city = $("#city_id").val();
+    	// var price = $('.priceName').val();
+    	// var description = $("#description").val();
     	if (pName == "") {
             $(".pNameError").text("Service title can not be empty!"); 
             $(".pNameError").css('display','block');
@@ -66,22 +88,46 @@
                 $(".pNameError").fadeOut();
             },1500);
             return false;
-        }  else if(price == ''){
-            $(".priceNameError").text("price can not be empty!"); 
-            $(".priceNameError").css('display','block');
+        } else if(unit == ''){
+            $(".unitNameError").text("Unit can not be empty!"); 
+            $(".unitNameError").css('display','block');
             setTimeout(function(){ 
-                $(".priceNameError").fadeOut();
+                $(".unitNameError").fadeOut();
             },1500);
             return false;
-        }else if(description == ''){
-    		$(".descriptionError").text("Description can not be empty!"); 
-		    $(".descriptionError").css('display','block');
+        }else if(city == ''){
+    		$(".cityNameError").text("Choose City!"); 
+		    $(".cityNameError").css('display','block');
 		    setTimeout(function(){ 
-		        $(".descriptionError").fadeOut();
+		        $(".cityNameError").fadeOut();
 		    },1500);
     		return false;
-    	}else{
+    	}
+        // else if(price == ''){
+        //     $(".priceNameError").text("price can not be empty!"); 
+        //     $(".priceNameError").css('display','block');
+        //     setTimeout(function(){ 
+        //         $(".priceNameError").fadeOut();
+        //     },1500);
+        //     return false;
+        // }else if(description == ''){
+    	// 	$(".descriptionError").text("Description can not be empty!"); 
+		//     $(".descriptionError").css('display','block');
+		//     setTimeout(function(){ 
+		//         $(".descriptionError").fadeOut();
+		//     },1500);
+    	// 	return false;
+    	// }
+        else{
     		return true;
     	}
     }
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() { 
+        $("#city_id").select2();
+    });
 </script>

@@ -34,18 +34,30 @@
                                                         <th class="hidden-phone"><b>Customer Name</b></th>
                                                         <td><?php echo $booking['customer']['firstName'].' '.$booking['customer']['lastName'];  ?></td>
                                                     </tr>
+                                                    
                                                     <tr>
                                                         <th class="hidden-phone"><b>Service Provider Name</b></th>
                                                         <td><?php echo $booking['provider']['firstName'].' '.$booking['provider']['lastName'];  ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>City </b></th>
+                                                        <td><?php echo $booking['city']['name'];  ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th class="hidden-phone"><b>Service Name</b></th>
                                                         <td><?php echo $booking['service']['title'];  ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <th class="hidden-phone"><b>City Name where service is provided</b></th>
-                                                        <td><?php echo $booking['city']['name'];  ?></td>
+                                                        <th class="hidden-phone"><b>Size of Waste</b></th>
+                                                        <td><?php echo $booking['waste_size'];  ?></td>
                                                     </tr>
+
+                                                    <tr>
+                                                        <th class="hidden-phone"><b>Service Charge</b></th>
+                                                        <td>₦ <?php echo $booking['service_charge'];  ?></td>
+                                                    </tr>
+
+
                                                     <tr>
                                                         <th class="hidden-phone"><b>Service Location</b></th>
                                                         <td><?php echo $booking['service_loaction'];  ?></td>
@@ -80,23 +92,12 @@
                                                     </tr>
                                                     <tr>
                                                         <th class="hidden-phone"><b>Payment Date</b></th>
-                                                        <td><?php echo $booking['payment']['createdDate'];  ?></td>
+                                                        <td><?php echo gmdate('M d, Y',strtotime($booking['payment']['createdDate'])); ?></td>
                                                     </tr>
                                                     <?php } ?>
-
-                                                    <tr>
-                                                        <th class="hidden-phone"><b>Size of Waste in ton</b></th>
-                                                        <td><?php echo $booking['waste_size'];  ?></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th class="hidden-phone"><b>Service Charge per ton</b></th>
-                                                        <td>₵<?php echo $booking['service_charge'];  ?></td>
-                                                    </tr>
-
                                             
                                                     <tr>
-                                                        <th class="hidden-phone">Total Amount</th>
+                                                        <th class="hidden-phone">Total Amount Paid</th>
                                                         <td>
 
                                                             <table>
@@ -108,9 +109,9 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td>₵<?php echo $booking['payment']['service_charge']; ?></td>
-                                                                <td>₵<?php echo $booking['payment']['municipality_charge']; ?></td>
-                                                                <td>₵<?php echo $booking['payment']['total_amount']; ?></td>
+                                                                <td>₦ <?php echo $booking['payment']['service_charge']; ?></td>
+                                                                <td>₦ <?php echo $booking['payment']['municipality_charge']; ?></td>
+                                                                <td>₦ <?php echo $booking['payment']['total_amount']; ?></td>
                                                             </tr>
                                                             
                                                             </table>

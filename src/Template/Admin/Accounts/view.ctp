@@ -5,7 +5,7 @@
 							<!-- TABLE HOVER -->
 							<div class="panel widget">
 								<div class="panel-heading widget-title">
-									<h3 class="panel-title">Account Details</h3>
+									<h3 class="panel-title">Transaction Details</h3>
 									<div class="right">
 										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
 									</div>
@@ -30,17 +30,17 @@
 
                                                     <tr>
                                                         <th class="hidden-phone"><b>Service Charge</b></th>
-                                                        <td>₵<?php echo $account['total_service_charge'];?></td>
+                                                        <td>₦ <?php echo $account['total_service_charge'];?></td>
                                                     </tr>
 
                                                     <tr>
                                                         <th class="hidden-phone"><b>Municipality Charge</b></th>
-                                                        <td><?php echo "₵".$account['municipality_charge']; ?></td>
+                                                        <td><?php echo "₦ ".$account['municipality_charge']; ?></td>
                                                     </tr>
 
                                                     <tr>
                                                         <th class="hidden-phone"><b>Total Amount</b></th>
-                                                        <td>₵<?php echo $account['total_amount_transferred']; ?></td>
+                                                        <td>₦ <?php echo $account['total_amount_transferred']; ?></td>
                                                     </tr>
 
                                                     <tr>
@@ -51,7 +51,7 @@
 
                                                     <tr>
                                                         <th class="hidden-phone"><b><?php echo $account['user']['type']=="SP"?"Total Revenue Generated":"Total Cost Generated";?></b></th>
-                                                        <td>₵<?php echo $total;  ?></td>
+                                                        <td>₦ <?php echo $total;  ?></td>
                                                     </tr>
                                                 
                                             </table>

@@ -14,11 +14,11 @@
                                 <!-- <a href="<?php echo $this->Url->build(["controller"=>"Reviews", "action"=>"add"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Review</a> -->
                             	<select style="margin-left: 2px;" class="btn btn-info pull-right" onchange="ratingfilter(this.value)" >
 									<option value="">Filter by Rating</option>
-									<option value="1">1 star</option>
-									<option value="2">2 star</option>
-									<option value="3">3 star</option>
-									<option value="4">4 star</option>
-									<option value="5">5 star</option>
+                                    <option value="1" <?php if(isset($rating) && $rating==1){echo 'selected';} ?> >1 star</option>
+									<option value="2" <?php if(isset($rating) && $rating==2){echo 'selected';} ?> >2 star</option>
+									<option value="3" <?php if(isset($rating) && $rating==3){echo 'selected';} ?> >3 star</option>
+									<option value="4" <?php if(isset($rating) && $rating==4){echo 'selected';} ?> >4 star</option>
+									<option value="5" <?php if(isset($rating) && $rating==5){echo 'selected';} ?> >5 star</option>
 								</select>
                                 <div class="col-sm-6"></div>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">

@@ -13,7 +13,7 @@
                             $subadminMenuArr = explode(',',@$admin_details['subadmin_access_ids']);
                         } 
                         if($logusertype=='A'){
-                            $subadminMenuArr = array('1','2','3','4','5','6','7', '8', '9','10');
+                            $subadminMenuArr = array('1','2','3','4','5','6','7', '8', '9','10', '11');
                         }
 
                         // echo '<pre>'; print_r($leftmenu_list);
@@ -78,6 +78,40 @@
                         </li>
                     <?php } ?>
                     
+                    <?php if(in_array('7',$subadminMenuArr)){ ?>
+                        <li>
+                            <a href="#service" data-toggle="collapse" class="collapsed <?php if(@$controller_name=='Services'){echo 'active';} ?>">
+                                <i class="lnr lnr-pushpin" aria-hidden="true"></i> <span>Manage Service</span><i class="icon-submenu lnr lnr-chevron-left"></i>
+                            </a>
+                            <div id="service" class="collapse ">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="<?php if(@$controller_name=='Services'){echo 'active';} ?>">
+                                            Service List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php } ?>
+
+                    <?php if(in_array('11',$subadminMenuArr)){ ?>
+                        <li>
+                            <a href="#price" data-toggle="collapse" class="collapsed <?php if(@$controller_name=='Prices'){echo 'active';} ?>">
+                            <i class="lnr lnr-paperclip" aria-hidden="true"></i> <span>Manage Price </span><i class="icon-submenu lnr lnr-chevron-left"></i>
+                            </a>
+                            <div id="price" class="collapse ">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="<?php echo $this->Url->build(["controller"=>"Prices", "action"=>"index"]); ?>" class="<?php if(@$controller_name=='Prices'){echo 'active';} ?>">
+                                            Price List
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php } ?>
+
                     <?php if(in_array('5',$subadminMenuArr) || in_array('6',$subadminMenuArr)){ ?>
                         <li>
                             <a href="#user" data-toggle="collapse" class="collapsed <?php if(@$action_name=='service_provider_list' || @$action_name=='customer_list'){echo 'active';} ?>">
@@ -94,23 +128,6 @@
                                         <a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"customer_list"]); ?>" class="<?php if(@$action_name=='customer_list'){echo 'active';} ?>">Customer</a>
                                     </li>
                                 <?php } ?>
-                                </ul>
-                            </div>
-                        </li>
-                    <?php } ?>
-                    
-                    <?php if(in_array('7',$subadminMenuArr)){ ?>
-                        <li>
-                            <a href="#service" data-toggle="collapse" class="collapsed <?php if(@$controller_name=='Services'){echo 'active';} ?>">
-                                <i class="lnr lnr-pushpin" aria-hidden="true"></i> <span>Manage Service</span><i class="icon-submenu lnr lnr-chevron-left"></i>
-                            </a>
-                            <div id="service" class="collapse ">
-                                <ul class="nav">
-                                    <li>
-                                        <a href="<?php echo $this->Url->build(["controller"=>"Services", "action"=>"index"]); ?>" class="<?php if(@$controller_name=='Services'){echo 'active';} ?>">
-                                            Service List
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -175,6 +192,7 @@
                             </div>
                         </li>
                     <?php } ?>
+
 
                     </ul>
                 </nav>

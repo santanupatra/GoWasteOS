@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5
+-- version 4.9.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 21, 2020 at 07:55 PM
--- Server version: 5.7.31-0ubuntu0.18.04.1
--- PHP Version: 7.1.33-19+ubuntu18.04.1+deb.sury.org+1
+-- Generation Time: Oct 31, 2020 at 01:54 PM
+-- Server version: 5.7.32-0ubuntu0.16.04.1
+-- PHP Version: 7.1.33-21+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -31,6 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
   `user_id` varchar(255) DEFAULT NULL,
+  `user_type` enum('C','SP') DEFAULT NULL,
   `transaction_type` enum('D','C') DEFAULT NULL COMMENT 'D=Debit, C=Credit',
   `total_service_charge` decimal(10,2) DEFAULT NULL,
   `municipality_charge` decimal(10,2) DEFAULT NULL,
@@ -45,15 +46,13 @@ CREATE TABLE `accounts` (
 -- Dumping data for table `accounts`
 --
 
-INSERT INTO `accounts` (`id`, `user_id`, `transaction_type`, `total_service_charge`, `municipality_charge`, `total_amount_transferred`, `booking_id`, `booking_view_id`, `is_active`, `created_date`) VALUES
-(1, '17', 'C', '2500.00', '300.00', '2500.00', '1', 'BOOK0001', 1, '2020-10-21 14:20:30'),
-(2, '18', 'D', '2500.00', '300.00', '2800.00', '1', 'BOOK0001', 1, '2020-10-21 14:20:30'),
-(3, '17', 'C', '11250.00', '1350.00', '11250.00', '2', 'BOOK0002', 1, '2020-10-21 14:21:30'),
-(4, '16', 'D', '11250.00', '1350.00', '12600.00', '2', 'BOOK0002', 1, '2020-10-21 14:21:30'),
-(5, '15', 'C', '20000.00', '2400.00', '20000.00', '3', 'BOOK0003', 1, '2020-10-21 14:21:59'),
-(6, '18', 'D', '20000.00', '2400.00', '22400.00', '3', 'BOOK0003', 1, '2020-10-21 14:21:59'),
-(7, '15', 'C', '25000.00', '3000.00', '25000.00', '4', 'BOOK0004', 1, '2020-10-21 14:22:33'),
-(8, '18', 'D', '25000.00', '3000.00', '28000.00', '4', 'BOOK0004', 1, '2020-10-21 14:22:33');
+INSERT INTO `accounts` (`id`, `user_id`, `user_type`, `transaction_type`, `total_service_charge`, `municipality_charge`, `total_amount_transferred`, `booking_id`, `booking_view_id`, `is_active`, `created_date`) VALUES
+(1, '17', 'SP', 'C', '30000.00', '3000.00', '30000.00', '1', 'BOOK0001', 1, '2020-10-31 08:16:09'),
+(2, '18', 'C', 'D', '30000.00', '3000.00', '33000.00', '1', 'BOOK0001', 1, '2020-10-31 08:16:09'),
+(3, '17', 'SP', 'C', '40000.00', '4000.00', '40000.00', '2', 'BOOK0002', 1, '2020-10-31 08:16:44'),
+(4, '18', 'C', 'D', '40000.00', '4000.00', '44000.00', '2', 'BOOK0002', 1, '2020-10-31 08:16:44'),
+(5, '15', 'SP', 'C', '33000.00', '3300.00', '33000.00', '3', 'BOOK0003', 1, '2020-10-31 08:17:18'),
+(6, '16', 'C', 'D', '33000.00', '3300.00', '36300.00', '3', 'BOOK0003', 1, '2020-10-31 08:17:18');
 
 -- --------------------------------------------------------
 
@@ -70,10 +69,11 @@ CREATE TABLE `bookings` (
   `service_provider_id` varchar(255) DEFAULT NULL,
   `customer_id` varchar(255) DEFAULT NULL,
   `service_provided_city_id` varchar(255) DEFAULT NULL,
-  `service_loaction` varchar(255) DEFAULT NULL,
   `service_id` varchar(255) DEFAULT NULL,
+  `price_id` varchar(255) NOT NULL,
   `service_charge` decimal(10,2) DEFAULT NULL,
   `service_status` enum('P','C','C&R') NOT NULL DEFAULT 'P',
+  `service_loaction` varchar(255) DEFAULT NULL,
   `payment_status` tinyint(2) NOT NULL DEFAULT '0',
   `is_active` tinyint(2) NOT NULL DEFAULT '1',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -83,11 +83,10 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `view_id`, `booking_date`, `booking_time`, `waste_size`, `service_provider_id`, `customer_id`, `service_provided_city_id`, `service_loaction`, `service_id`, `service_charge`, `service_status`, `payment_status`, `is_active`, `created_date`) VALUES
-(1, 'BOOK0001', '2020-10-24', '10:00:00', '20', '17', '18', '1', 'Kolkata, West Bengal, India', '7', '125.00', 'P', 1, 1, '2020-10-21 14:20:30'),
-(2, 'BOOK0002', '2020-10-26', '12:30:00', '50', '17', '16', '1', 'Kolkata, West Bengal, India', '6', '225.00', 'P', 1, 1, '2020-10-21 14:21:30'),
-(3, 'BOOK0003', '2020-10-28', '11:00:00', '50', '15', '18', '1', 'Kolkata, West Bengal, India', '3', '400.00', 'P', 1, 1, '2020-10-21 14:21:59'),
-(4, 'BOOK0004', '2020-10-29', '08:30:00', '50', '15', '18', '1', 'Kolkata, West Bengal, India', '5', '500.00', 'P', 1, 1, '2020-10-21 14:22:33');
+INSERT INTO `bookings` (`id`, `view_id`, `booking_date`, `booking_time`, `waste_size`, `service_provider_id`, `customer_id`, `service_provided_city_id`, `service_id`, `price_id`, `service_charge`, `service_status`, `service_loaction`, `payment_status`, `is_active`, `created_date`) VALUES
+(1, 'BOOK0001', '2020-11-30', '13:44:00', '15,000 Liters', '17', '18', '3', '1', '4', '30000.00', 'P', 'Owerri Airport, Airport Road, Nigeria', 1, 1, '2020-10-31 08:16:09'),
+(2, 'BOOK0002', '2020-11-01', '13:46:00', '10,000 Liters', '17', '18', '2', '1', '7', '40000.00', 'P', 'Orlu Junction, Ihiala-Orlu Road, Ihiala, Nigeria', 1, 1, '2020-10-31 08:16:44'),
+(3, 'BOOK0003', '2020-11-19', '13:46:00', '6,000-7,500 Liters', '15', '16', '1', '1', '10', '33000.00', 'P', 'Okigwe Road, Owerri, Nigeria', 1, 1, '2020-10-31 08:17:18');
 
 -- --------------------------------------------------------
 
@@ -107,12 +106,9 @@ CREATE TABLE `cities` (
 --
 
 INSERT INTO `cities` (`id`, `name`, `is_active`, `created_date`) VALUES
-(1, 'kolkata', 1, '2020-10-21 14:14:00'),
-(2, 'Mumbai', 1, '2020-10-21 14:14:07'),
-(3, 'Delhi', 1, '2020-10-21 14:14:14'),
-(4, 'Pune', 1, '2020-10-21 14:14:20'),
-(5, 'Hydrabad', 1, '2020-10-21 14:14:27'),
-(6, 'Amritsar', 1, '2020-10-21 14:14:45');
+(1, 'OKIGWE', 1, '2020-10-31 08:04:00'),
+(2, 'ORLU', 1, '2020-10-31 08:04:08'),
+(3, 'OWERRI', 1, '2020-10-31 08:04:14');
 
 -- --------------------------------------------------------
 
@@ -139,7 +135,9 @@ INSERT INTO `leftmenu_list` (`id`, `name`, `status`) VALUES
 (6, 'Manage Customer', 'active'),
 (7, 'Manage Service', 'active'),
 (8, 'Manage Booking', 'active'),
-(9, 'Manage Review', 'active');
+(9, 'Manage Review', 'active'),
+(10, 'Manage Account', 'active'),
+(11, 'Manage Price', 'active');
 
 -- --------------------------------------------------------
 
@@ -167,10 +165,44 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `booking_id`, `booking_view_id`, `service_charge`, `municipality_charge`, `total_amount`, `currency`, `transaction_id`, `payment_method`, `payment_status`, `is_active`, `createdDate`) VALUES
-(1, '1', 'BOOK0001', 2500.00, 300.00, 2800.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:20:30'),
-(2, '2', 'BOOK0002', 11250.00, 1350.00, 12600.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:21:30'),
-(3, '3', 'BOOK0003', 20000.00, 2400.00, 22400.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:21:59'),
-(4, '4', 'BOOK0004', 25000.00, 3000.00, 28000.00, 'Cent', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-21 14:22:33');
+(1, '1', 'BOOK0001', 30000.00, 3000.00, 33000.00, 'NGN', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-31 08:16:09'),
+(2, '2', 'BOOK0002', 40000.00, 4000.00, 44000.00, 'NGN', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-31 08:16:44'),
+(3, '3', 'BOOK0003', 33000.00, 3300.00, 36300.00, 'NGN', 'XXXXX-XXXX-XXXX', 'Cash', 1, 1, '2020-10-31 08:17:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prices`
+--
+
+CREATE TABLE `prices` (
+  `id` int(11) NOT NULL,
+  `service_id` varchar(255) DEFAULT NULL,
+  `city_id` varchar(255) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL,
+  `price` float(10,2) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(2) NOT NULL DEFAULT '1',
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `prices`
+--
+
+INSERT INTO `prices` (`id`, `service_id`, `city_id`, `size`, `price`, `category`, `is_active`, `created_date`) VALUES
+(1, '1', '3', '4,000', 15000.00, 'A', 1, '2020-10-31 08:07:26'),
+(2, '1', '3', '6,000-7,500', 25000.00, 'B', 1, '2020-10-31 08:08:14'),
+(3, '1', '3', '10,000', 27000.00, 'C', 1, '2020-10-31 08:08:44'),
+(4, '1', '3', '15,000', 30000.00, 'D', 1, '2020-10-31 08:09:08'),
+(5, '1', '2', '4,000', 25000.00, 'A', 1, '2020-10-31 08:10:05'),
+(6, '1', '2', '6,000-7,500', 33000.00, 'B', 1, '2020-10-31 08:10:46'),
+(7, '1', '2', '10,000', 40000.00, 'C', 1, '2020-10-31 08:11:10'),
+(8, '1', '2', '15,000', 40000.00, 'D', 1, '2020-10-31 08:11:34'),
+(9, '1', '1', '4,000', 25000.00, 'A', 1, '2020-10-31 08:12:38'),
+(10, '1', '1', '6,000-7,500', 33000.00, 'B', 1, '2020-10-31 08:13:00'),
+(11, '1', '1', '10,000', 40000.00, 'C', 1, '2020-10-31 08:13:37'),
+(12, '1', '1', '15,000', 40000.00, 'D', 1, '2020-10-31 08:14:01');
 
 -- --------------------------------------------------------
 
@@ -184,6 +216,8 @@ CREATE TABLE `reviews` (
   `from_id` varchar(255) DEFAULT NULL,
   `rating` varchar(255) DEFAULT NULL,
   `comment` text,
+  `booking_id` varchar(255) DEFAULT NULL,
+  `is_reviewer_customer` tinyint(2) DEFAULT NULL,
   `is_active` tinyint(2) NOT NULL DEFAULT '1',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -192,11 +226,13 @@ CREATE TABLE `reviews` (
 -- Dumping data for table `reviews`
 --
 
-INSERT INTO `reviews` (`id`, `to_id`, `from_id`, `rating`, `comment`, `is_active`, `created_date`) VALUES
-(1, '18', '17', '5', 'good', 1, '2020-10-21 14:23:08'),
-(2, '18', '15', '5', 'good!', 1, '2020-10-21 14:23:29'),
-(3, '15', '16', '5', 'good!', 1, '2020-10-21 14:23:43'),
-(4, '16', '18', '4', 'good!', 1, '2020-10-21 14:23:57');
+INSERT INTO `reviews` (`id`, `to_id`, `from_id`, `rating`, `comment`, `booking_id`, `is_reviewer_customer`, `is_active`, `created_date`) VALUES
+(1, '18', '17', '5', 'Good!', '1', 0, 1, '2020-10-31 08:19:44'),
+(2, '17', '18', '5', 'Good!', '1', 1, 1, '2020-10-31 08:20:03'),
+(3, '18', '17', '1', 'Bad!', '2', 0, 1, '2020-10-31 08:20:37'),
+(4, '17', '18', '1', 'Bad!', '2', 1, 1, '2020-10-31 08:20:51'),
+(5, '16', '15', '5', 'Good!', '3', 0, 1, '2020-10-31 08:21:07'),
+(6, '15', '16', '5', 'Good!', '3', 1, 1, '2020-10-31 08:21:26');
 
 -- --------------------------------------------------------
 
@@ -211,6 +247,8 @@ CREATE TABLE `services` (
   `content` mediumtext,
   `image` varchar(255) DEFAULT NULL,
   `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `unit` enum('Tons','Liters') DEFAULT NULL,
+  `city_id` varchar(255) DEFAULT NULL,
   `isActive` tinyint(2) NOT NULL DEFAULT '1',
   `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -219,13 +257,8 @@ CREATE TABLE `services` (
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`id`, `title`, `slug`, `content`, `image`, `price`, `isActive`, `createdDate`) VALUES
-(2, 'Disposal by Incineration', 'Disposal-by-Incineration', 'This process involves the burning of wastes in airtight incinerators. This process is cheap and very efficient as it reduces the size of the wastes by up to 95%. The by-products of incineration such as heat and ash can be used for energy creation and hydroponic purposes respectively. The energy can later be used to provide power in the industry. This method is commonly used for toxic and hazardous wastes.', 'service_image/5f8d52aa680f3.jpg', '500.00', 1, '2020-09-30 17:47:17'),
-(3, 'Recycling and Reusing:', 'Recycling-and-Reusing', 'Recycling and reusing is another effective means of disposing of wastes. Wastes such as glass, rubber, plastic or wood can be transformed through industrial processing into other useful products that can be used again. You could also reuse items such as plastic bottles and paper bags instead of throwing them away. This will greatly reduce the amount of waste you have and also help you save money that you could have used to purchase new plastic bottles or paper bags.', 'service_image/5f8d526f164b5.png', '400.00', 1, '2020-09-30 17:48:05'),
-(4, 'Vermicomposting', 'Vermicomposting', 'This is another type of waste disposal that involves the use of worms to help decompose wastes. A specific type of worms is used to feed on the wastes and digest them. This process not only helps with waste disposal but also helps improve soil nutrition. The excretion of the worms adds nutrients to the soil, this improves the quality of the soil leading to a better growth of plants.', 'service_image/5f8d522f50aef.jpg', '249.99', 1, '2020-09-30 17:48:55'),
-(5, 'Biogas and Fertilizer Generation', 'Biogas-and-Fertilizer-Generation', 'Organic wastes can be used to create compost that will, later on, be decomposed naturally into nutrient-rich fertilizer. This is mostly used by farmers or homeowners with a large amount of organic waste. The type of fertilizer formed is advantageous to plants since it’s all organic. Biodegradable wastes can also be used to create biogas. Bio-degradation companies turn these wastes into biogas by using fungi and bacteria to decay the wastes. The biogas generated is later then used as fuel. This method is very efficient for organic and biodegradable wastes.', 'service_image/5f8d52042e097.jpg', '500.00', 1, '2020-10-19 08:27:58'),
-(6, 'Hygienic Landfill', 'Hygienic-Landfill', 'This process involves non-recyclable wastes. The selected area of the landfill should have low levels of groundwater and should have non-porous soil. The area should not be prone to flooding too. A base first created to prevent harmful chemicals from reaching the water zone below. After that, the wastes are carefully separated and spread out on the protective base. Later on, layers of soil are spread on top of the waste and compacted. The Landfill area can then serve as a leisure ground or park at least until the wastes decompose. This could take up to more than 25 years hence no construction should take place in the landfill area', 'service_image/5f8d51cac70c8.jpg', '225.00', 1, '2020-10-19 08:40:39'),
-(7, 'Disposal in Water Bodies', 'Disposal-in-Water-Bodies', 'Hazardous wastes such as radioactive substances are usually dumped into large water bodies such as oceans and seas. These type of toxic wastes sink deep into the water to avoid their contamination from reaching human beings.\r\n\r\nThe above 6 methods are so far the most effective and reliable methods to dispose of waste products. In addition to that, they are safe as they reduce the risk and chances of human and animal contamination.\r\n\r\nIf you’re looking for rubbish removal company in UK, you can contact 020 8099 9819 immediately, our team will arrive with Man and Van to collect wastes at your place.', '', '125.00', 1, '2020-10-19 08:50:23');
+INSERT INTO `services` (`id`, `title`, `slug`, `content`, `image`, `price`, `unit`, `city_id`, `isActive`, `createdDate`) VALUES
+(1, 'SWERAGE MANAGEMENT', 'SWERAGE-MANAGEMENT', NULL, NULL, '0.00', 'Liters', '3,2,1', 1, '2020-10-31 08:04:47');
 
 -- --------------------------------------------------------
 
@@ -246,7 +279,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`id`, `municipalityCharge`, `siteEmail`, `phoneNumber`, `address`) VALUES
-(1, 12.00, 'info@goWasteOs.com', '123456', 'KOlkata');
+(1, 10.00, 'info@goWasteOs.com', '123456', 'KOlkata');
 
 -- --------------------------------------------------------
 
@@ -281,11 +314,14 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `view_id`, `type`, `firstName`, `lastName`, `email`, `password`, `address`, `city_id`, `company_name`, `phoneNumber`, `profilePicture`, `subadmin_access_ids`, `rating`, `isAdmin`, `isActive`, `isDeleted`, `createdDate`) VALUES
 (1, NULL, 'A', 'Admin', NULL, 'admin@admin.com', '$2y$10$N9Hynmn2J4i.h/XdmHUS9OaZivRz/QV5SWu05y134iSPAuDoKG21S', NULL, '', '', NULL, 'userImg/5f9042156e140.png', NULL, NULL, 1, 1, 0, '2020-10-15 20:28:33'),
-(14, NULL, 'SA', 'Sub', 'Admin', 'subadmin@gmail.com', '$2y$10$hOzCqwBBNkwryVhdicqsS.zeDtSzikjhG.LqiFJNXLllIkwnuIQAe', NULL, NULL, NULL, '(123) 456-7890', 'userImg/5f90420a88e31.png', '1,4,5,7,9', NULL, 1, 1, 0, '2020-10-21 14:13:30'),
-(15, NULL, 'SP', 'sonali', 'bhaumik', 'sonali.bhaumik@cbnits.com', NULL, 'Milan Bazar, Samarpally, Krishnapur, Kestopur, Calcutta, West Bengal, India', '1', '', '(123) 456-7890', 'userImg/5f9042ac8f0cb.png', NULL, '5', 0, 1, 0, '2020-10-21 14:16:12'),
-(16, NULL, 'C', 'Sharmistha', 'Ghosh', 'sharmistha.ghosh@cbnits.com', NULL, 'Paikpara, Calcutta, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f9042ec8de32.png', NULL, '4', 0, 1, 0, '2020-10-21 14:17:16'),
-(17, NULL, 'SP', 'asmita', NULL, 'asmita@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', '', '(123) 456-7890', 'userImg/5f904343d9dbc.png', NULL, NULL, 0, 1, 0, '2020-10-21 14:18:43'),
-(18, NULL, 'C', 'pausali', NULL, 'paushali@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f904378dc056.png', NULL, '5', 0, 1, 0, '2020-10-21 14:19:36');
+(14, NULL, 'SA', 'Sub', 'Admin', 'subadmin@gmail.com', '$2y$10$hOzCqwBBNkwryVhdicqsS.zeDtSzikjhG.LqiFJNXLllIkwnuIQAe', NULL, NULL, NULL, '(123) 456-7890', 'userImg/5f90420a88e31.png', '1,4', NULL, 1, 1, 0, '2020-10-21 14:13:30'),
+(15, NULL, 'SP', 'Sonali', 'Bhaumik', 'sonali.bhaumik@cbnits.com', NULL, 'Milan Bazar, Samarpally, Krishnapur, Kestopur, Calcutta, West Bengal, India', '1', '', '(123) 456-7890', 'userImg/5f9042ac8f0cb.png', NULL, '5', 0, 1, 0, '2020-10-21 14:16:12'),
+(16, NULL, 'C', 'Sharmistha', 'Ghosh', 'sharmistha.ghosh@cbnits.com', NULL, 'Paikpara, Calcutta, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f9042ec8de32.png', NULL, '5', 0, 1, 0, '2020-10-21 14:17:16'),
+(17, NULL, 'SP', 'Asmita', 'Mukherjee', 'asmita@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', 'testing the tester', '(123) 456-7890', 'userImg/5f904343d9dbc.png', NULL, '3', 0, 1, 0, '2020-10-21 14:18:43'),
+(18, NULL, 'C', 'Pausali', 'Karmakar', 'paushali@gmail.com', NULL, 'Kolkata, West Bengal, India', '1', NULL, '(123) 456-7890', 'userImg/5f904378dc056.png', NULL, '3', 0, 1, 0, '2020-10-21 14:19:36'),
+(19, NULL, 'SA', 'Dayo', 'aliyu', 'olagoaste@gmail.com', '$2y$10$vgl/7auBt2aMl2y8ouWpj.hdqdLdF13nnFXdCJEKwzSENvUCiOWmG', NULL, NULL, NULL, '(080) 375-894', '', '2', NULL, 1, 0, 0, '2020-10-26 09:20:56'),
+(20, NULL, 'SP', 'Sonali', 'Saha', 's@gmail.com', '$2y$10$BcwvxdSpbN0B/M6BfxXYZusWskaktqMpGrSSbTij/V/xZzyhkQbJa', 'Kolkata, West Bengal, India', '1', 'test', '(123) 456-7890', '', NULL, NULL, 0, 0, 0, '2020-10-28 10:34:19'),
+(22, NULL, 'C', 'sonali', 'mukherjee', 'sd@gmail.com', '$2y$10$o5DRtfi245f63kLxZEfMjuhMWNBza4uJWcUuRcc5JHJVGYDz8Nfn2', 'Kolobrzeg, Poland', '1', NULL, '(123) 456-7890', '', NULL, NULL, 0, 0, 0, '2020-10-28 10:39:51');
 
 --
 -- Indexes for dumped tables
@@ -322,6 +358,12 @@ ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `prices`
+--
+ALTER TABLE `prices`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -353,43 +395,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `leftmenu_list`
 --
 ALTER TABLE `leftmenu_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `prices`
+--
+ALTER TABLE `prices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -401,7 +449,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

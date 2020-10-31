@@ -25,7 +25,7 @@ class UsersController extends AppController {
     }
 
     public $paginate = [
-        'limit' => 15
+        'limit' => 9
     ];
     
     /**
@@ -278,12 +278,11 @@ class UsersController extends AppController {
         $status = @$this->request->query['status'];
         if(@$status!=''){
             $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0, 'isActive'=>$status])->order(['id'=>'desc']);
+            $this->set(compact('status'));
         } else {
             $customers = $this->Users->find()->where(['type'=>'C', 'isDeleted'=>0])->order(['id'=>'desc']);
         }
-
         $customers = $this->paginate($customers)->toArray();
-
         $this->set(compact('customers'));
     }
 
@@ -292,6 +291,7 @@ class UsersController extends AppController {
         $status = @$this->request->query['status'];
         if(@$status!=''){
             $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0, 'isActive'=>$status])->order(['id'=>'desc']);
+            $this->set(compact('status'));
         } else {
             $service_providers = $this->Users->find()->where(['type'=>'SP', 'isDeleted'=>0])->order(['id'=>'desc']);
         }

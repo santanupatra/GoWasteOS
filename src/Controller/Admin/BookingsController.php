@@ -21,7 +21,7 @@ class BookingsController extends AppController {
     }
 
     public $paginate = [
-        'limit' => 15
+        'limit' => 9
     ];
 
     /**
@@ -65,15 +65,22 @@ class BookingsController extends AppController {
         $this->loadModel('Payments');
         $this->loadModel('Accounts');
         $this->loadModel('Settings');
+        $this->loadModel('Prices');
         $settings = $this->Settings->get(1);
         $booking = $this->Bookings->newEntity();
         if ($this->request->is('post')) {
-            //pr($this->request->data['booking_time']); exit();
-            $this->request->data['booking_date']=date("Y-m-d",strtotime($this->request->data['booking_date']));
+            // pr($this->request->data) ;
+            // exit();
+            $date = str_replace('/', '-', $this->request->data['booking_date']);
+            $this->request->data['booking_date']=date('Y-m-d', strtotime($date));
+            $this->request->data['booking_time']=gmdate('H:i', strtotime($this->request->data['booking_time']));
             //$duplicate=$this->Bookings->find()->where(['service_provider_id'=>$this->request->data['service_provider_id'], 'booking_date'=>$this->request->data['booking_date'],'booking_time'=>date("H:i:s",strtotime($this->request->data['booking_time']))])->first();
             //if(empty($duplicate)){
                 $service = $this->Services->get($this->request->data['service_id']);
-                $this->request->data['service_charge']=$service['price'];
+                $priceSize = $this->Prices->get($this->request->data['size']);
+                $this->request->data['service_charge']=$priceSize['price'];
+                $this->request->data['waste_size']=$priceSize['size'].' '.$service['unit'];
+                $this->request->data['price_id']=$this->request->data['size'];
                 $this->request->data['payment_status']=1;
                 
                 $booking = $this->Bookings->patchEntity($booking, $this->request->data);
@@ -85,7 +92,7 @@ class BookingsController extends AppController {
                     $status['view_id']='BOOK000'.$insertedId;
                     $bookinEdit = $this->Bookings->patchEntity($bookinEdit, $status);
                     if($this->Bookings->save($bookinEdit)){
-                        $total_service_charge=$service['price']*$this->request->data['waste_size'];
+                        $total_service_charge=$priceSize['price'];
                         $municipality_charge=($total_service_charge)*($settings['municipalityCharge']/100);
                         $total_amount=$municipality_charge+$total_service_charge; 
                         $payment = $this->Payments->newEntity();
@@ -95,7 +102,7 @@ class BookingsController extends AppController {
                         $paymentStatus['service_charge']=$total_service_charge;   
                         $paymentStatus['municipality_charge']=$municipality_charge;   
                         $paymentStatus['total_amount']=$total_amount;
-                        $paymentStatus['currency']='Cent';   
+                        $paymentStatus['currency']='NGN';   
                         $paymentStatus['transaction_id']='XXXXX-XXXX-XXXX';   
                         $paymentStatus['payment_method']="Cash";   
                         $paymentStatus['payment_status']=1;   
@@ -144,10 +151,53 @@ class BookingsController extends AppController {
         }
 
         $cities = $this->Cities->find()->where(['is_active'=>1])->order(['id'=>'DESC'])->toArray();
-        $customers = $this->Users->find()->where(['isActive'=>1, 'type'=>'C'])->order(['id'=>'DESC'])->toArray();
-        $service_providers = $this->Users->find()->where(['isActive'=>1, 'type'=>'SP'])->order(['id'=>'DESC'])->toArray();
+        $customers = $this->Users->find()->where(['isActive'=>1,'isDeleted'=>0,'type'=>'C'])->order(['id'=>'DESC'])->toArray();
+        $service_providers = $this->Users->find()->where(['isActive'=>1, 'isDeleted'=>0,'type'=>'SP'])->order(['id'=>'DESC'])->toArray();
         $services = $this->Services->find()->where(['isActive'=>1])->order(['id'=>'DESC'])->toArray();
         $this->set(compact('cities', 'customers', 'service_providers', 'services'));
+    }
+
+    function getService() {
+        $city_id=$_POST['city_id'];   
+        $output='<select name="service_id" class="form-control" id="service_id" onchange="getPrice()">
+        <option value="">Select Service</option>>';
+        if(isset($city_id)){
+            $this->loadModel('Services');
+            $service=$this->Services->find()->where(['FIND_IN_SET(\''. $city_id .'\',city_id)', 'isActive'=>1])->order(['id'=>'DESC'])->toArray();;            
+            if(!empty($service)){
+                foreach ($service as $key => $value) {
+                $output .='<option value="'.$value['id'].'">'.$value['title'].'</option>';                
+                }
+            }else{
+                $output .='<option value="">No Service Found</option>';
+            }            
+        }else{
+            $output .='<option value="">No Service Found</option>';
+        }
+        $output .='</select>';
+        echo $output; exit();
+    }
+
+    function getPrice() {
+        $service_id=$_POST['service_id'];   
+        $city_id=$_POST['city_id'];   
+        $output='<select name="size" class="form-control" id="price_id">
+        <option value="">Select Price</option>>';
+        if(isset($service_id) && isset($city_id)){
+            $this->loadModel('Prices');
+            $prices=$this->Prices->find()->where(['is_active'=>1, 'service_id'=>$service_id, 'city_id'=>$city_id])->order(['id'=>'DESC'])->toArray();;            
+            if(!empty($prices)){
+                foreach ($prices as $key => $value) {
+                $output .='<option value="'.$value['id'].'">'.$value['category'].'(₦ '.$value['price'].'/'.$value['size'].')'.'</option>';                
+                }
+            }else{
+                $output .='<option value="">No Price Found with respect to this service and zone.</option>';
+            }            
+        }else{
+            $output .='<option value="">No Price Found</option>';
+        }
+        $output .='</select>';
+        echo $output; exit();
     }
 
 
@@ -166,6 +216,32 @@ class BookingsController extends AppController {
         if ($this->Bookings->delete($booking)) {
             if($this->Payments->deleteAll(['booking_id' => $id])){
                 if($this->Accounts->deleteAll(['booking_id' => $id])){
+                    $this->loadModel('Reviews');
+                    $this->loadModel('Users');
+                    $deleteReviews=$this->Reviews->find()->where(['booking_id' => $id])->toArray();
+                    foreach ($deleteReviews as $reviewkey => $reviewvalue) {
+                        $review = $this->Reviews->get($reviewvalue['id']);
+                        if ($this->Reviews->delete($review)) {
+                            $reviewsAll = $this->Reviews->find()->where(['is_active'=>1, 'to_id'=>$reviewvalue['to_id']])->toArray();
+                            $avgRating=0;
+                            $reviewCount=0;
+                            if(!empty($reviewsAll)){
+                                foreach ($reviewsAll as $reviewsAllkey => $reviewsAllvalue) {
+                                    $reviewCount+=$reviewsAllvalue['rating'];
+                                }
+                                $avgRating=$reviewCount/count($reviewsAll);
+                            }
+                
+                            $userEdit = $this->Users->get($reviewvalue['to_id']);
+                            $status=array();
+                            $status['rating']=$avgRating;
+                            $userEdit = $this->Users->patchEntity($userEdit, $status);
+                            if($this->Users->save($userEdit)){
+    
+                            }
+                           
+                        }
+                    }
                     $this->Flash->success(__('Booking has been deleted.'));
                 }
             }

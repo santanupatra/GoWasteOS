@@ -14,8 +14,8 @@
 									
 									<select style="margin-left: 2px;" class="btn btn-info pull-right" onchange="statusfilter(this.value)" >
 										<option value="">Filter by Status</option>
-										<option value="1">Active</option>
-										<option value="0">Inactive</option>
+                                        <option value="1" <?php if(isset($status) && $status==1){echo 'selected';} ?>>Active</option>
+										<option value="0" <?php if(isset($status) && $status==0){echo 'selected';} ?> >Inactive</option>
 									</select>
 									<a href="<?php echo $this->Url->build(["controller"=>"Users", "action"=>"add_service_provider"]); ?>" class="btn btn-info pull-right add-tag-top"><i class="fa fa-plus"></i> Add New Service Provider</a>
 									<table class="table table-hover table-bordered pt-2" id="competitionTable">

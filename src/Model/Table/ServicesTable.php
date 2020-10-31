@@ -16,6 +16,10 @@ class ServicesTable extends Table {
                 'superSlug' => 'slug',
             ]
         ]);
+        // $this->belongsTo('Cities', [
+        //     'className' => 'Cities',
+        //     'foreignKey' => 'city_id'
+        // ]);
     }
 
 }

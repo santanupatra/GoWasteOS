@@ -17,9 +17,9 @@
 											<tr>
 												<th>SR No.</th>
 												<th>Name</th>
-												<!-- <th>Total Debit Amount</th>
+												<th>Total Debit Amount</th>
 												<th>Total Credit Amount</th>
-												<th>Total Revenue generated</th> -->
+												<th>Total Revenue generated</th>
 												<th>Actions</th>
 											</tr>
 										</thead>
@@ -27,22 +27,14 @@
                                             <?php 
                                             
                                             $n=1;
-                                            foreach($accounts as $account):  
-                                                // $quantity = $this->requestAction(array(
-                                                //     'controller' => 'Accounts',
-                                                //     'action' => 'getAmount'),
-                                                //     array('user_id' => $account['user_id']));
-                                                    // $var = $this->requestAction('/accounts/getAmount', [
-                                                    //     'query' => ['user_id' => $account['user_id']]
-                                                    //   ]);
-                                                 //echo $account['user_id'];
+                                            foreach($accounts as $key => $account):  
                                                 ?>
 											<tr>
                                                 <td><?php echo '#'.$n; ?></td>
                                                 <td><?php echo $account['user']['firstName'].' '.$account['user']['lastName']; ?></td>
-												<!-- <td>₵xx.xx</td>
-												<td>₵xx.xx</td>
-												<td>₵xx.xx</td>-->
+												<td>₦ <?php echo $debits[$key]; ?></td>
+												<td>₦ <?php echo $credits[$key]; ?></td>
+												<td>₦ <?php echo $totals[$key]; ?></td>
 												<td> 
 													<a href="<?php echo $this->Url->build('/admin/Accounts/index/'.base64_encode($account['user_id']).'/'.base64_encode($account['user_id'])); ?>" class="btn btn-success btn-xs gap-btn"><i class="fa fa-eye edit-tag-icon"></i> View</a>
 												</td>

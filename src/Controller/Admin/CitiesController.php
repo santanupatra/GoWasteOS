@@ -22,7 +22,7 @@ class CitiesController extends AppController {
 
     public $paginate = [
         'Cities' => [
-            'limit' => 20
+            'limit' => 9
         ]
     ];
 
@@ -98,10 +98,79 @@ class CitiesController extends AppController {
      */
     public function delete($id = null) {
         $this->viewBuilder()->layout('admin');
+        $this->loadModel('Prices');
+        $this->loadModel('Services');
         $id = base64_decode($id);
+        $this->loadModel('Bookings');
+        // $deleteBookings=$this->Bookings->find()->where(['service_provided_city_id' => $id])->toArray();
+        // pr($deleteBookings);
+        // pr($id);
+        // exit();
         $city = $this->Cities->get($id);
         if ($this->Cities->delete($city)) {
-            $this->Flash->success(__('City has been deleted.'));
+            if($this->Prices->deleteAll(['city_id' => $id])){
+                $this->loadModel('Bookings');
+                $this->loadModel('Payments');
+                $this->loadModel('Accounts');
+                $deleteBookings=$this->Bookings->find()->where(['service_provided_city_id' => $id])->toArray();
+                foreach ($deleteBookings as $key => $value) {
+                    $bookingDelete = $this->Bookings->get($value['id']);
+                    if ($this->Bookings->delete($bookingDelete)) {
+                        if($this->Payments->deleteAll(['booking_id' => $value['id']])){
+                            if($this->Accounts->deleteAll(['booking_id' => $value['id']])){
+                            }
+                        }
+                        $this->loadModel('Reviews');
+                        $this->loadModel('Users');
+                        $deleteReviews=$this->Reviews->find()->where(['booking_id' => $value['id']])->toArray();
+                        foreach ($deleteReviews as $reviewkey => $reviewvalue) {
+                            $review = $this->Reviews->get($reviewvalue['id']);
+                            if ($this->Reviews->delete($review)) {
+                                $reviewsAll = $this->Reviews->find()->where(['is_active'=>1, 'to_id'=>$reviewvalue['to_id']])->toArray();
+                                $avgRating=0;
+                                $reviewCount=0;
+                                if(!empty($reviewsAll)){
+                                    foreach ($reviewsAll as $reviewsAllkey => $reviewsAllvalue) {
+                                        $reviewCount+=$reviewsAllvalue['rating'];
+                                    }
+                                    $avgRating=$reviewCount/count($reviewsAll);
+                                }
+                    
+                                $userEdit = $this->Users->get($reviewvalue['to_id']);
+                                $status=array();
+                                $status['rating']=$avgRating;
+                                $userEdit = $this->Users->patchEntity($userEdit, $status);
+                                if($this->Users->save($userEdit)){
+        
+                                }
+                               
+                            }
+                        }
+                    }
+                }
+                $services = $this->Services->find()->where(['FIND_IN_SET(\''. $id .'\',city_id)'])->order(['id'=>'DESC'])->toArray();
+                foreach ($services as $key => $value) {
+                    $serviceValues=explode(',',$value['city_id']);
+                    if (in_array($id, $serviceValues)){
+                        unset($serviceValues[array_search($id,$serviceValues)]);
+                        if(count($serviceValues)>0){
+                            $service = $this->Services->get($value['id']);
+                            $edit=array();
+                            $edit['city_id']=implode(",", $serviceValues);
+                            $service = $this->Services->patchEntity($service, $edit);
+                            if ($this->Services->save($service)) {
+                                //$this->Flash->success(__('City has been deleted.'));
+                            }
+                        }else{
+                            $deleteservice = $this->Services->get($value['id']);
+                            if($this->Services->delete($deleteservice)){
+                                //$this->Flash->success(__('City has been deleted.'));
+                            }
+                        }
+                    }
+                }
+                $this->Flash->success(__('City has been deleted.'));
+            }
         }else {
             $this->Flash->error(__('City could not deleted. Please, try again.'));
         }

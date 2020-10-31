@@ -21,7 +21,7 @@ class ReviewsController extends AppController {
     }
 
     public $paginate = [
-        'limit' => 15
+        'limit' => 9
     ];
 
     /**
@@ -32,26 +32,24 @@ class ReviewsController extends AppController {
     public function index() {
         $this->viewBuilder()->layout('admin');
         $rating = @$this->request->query['rating'];
-
         if(@$rating!=''){
             $reviews = $this->Reviews->find()->where(['Reviews.rating'=>$rating, 'Reviews.is_reviewer_customer'=>1])->contain(['Reviewds', 'Reviewers', 'Bookings'])->order(['Reviews.id' => 'DESC']);
+            $this->set(compact('rating'));
         } else {
             $reviews = $this->Reviews->find()->where(['Reviews.is_reviewer_customer'=>1])->contain(['Reviewds', 'Reviewers','Bookings'])->order(['Reviews.id' => 'DESC']);
-        }
-        
+        }  
         $this->set('reviews', $this->paginate($reviews));
     }
 
     public function service_provider() {
         $this->viewBuilder()->layout('admin');
         $rating = @$this->request->query['rating'];
-
         if(@$rating!=''){
             $reviews = $this->Reviews->find()->where(['Reviews.rating'=>$rating, 'Reviews.is_reviewer_customer'=>0])->contain(['Reviewds', 'Reviewers', 'Bookings'])->order(['Reviews.id' => 'DESC']);
+            $this->set(compact('rating'));
         } else {
             $reviews = $this->Reviews->find()->where(['Reviews.is_reviewer_customer'=>0])->contain(['Reviewds', 'Reviewers','Bookings'])->order(['Reviews.id' => 'DESC']);
-        }
-        
+        }      
         $this->set('reviews', $this->paginate($reviews));
     }
 

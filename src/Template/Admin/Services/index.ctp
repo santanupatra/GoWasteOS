@@ -16,29 +16,33 @@
 										<thead>
 											<tr>
                                                 <th>SR No.</th>
-												<th>Icon</th>
+												<!-- <th>Icon</th> -->
 												<th>Title</th>
-												<th>Content</th>
-												<th>Price</th>
+												<!-- <th>Content</th>
+												<th>Price</th> -->
+												<th>Unite of Waste Size</th>
+												<th>City</th>
 												<th>Status</th>
 												<th>Actions</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php $n=1;
-											foreach($services as $service): ?>
+											foreach($services as $key=> $service): // pr($service);?>
 											<tr>
                                                 <td><?php echo '#'.$n; ?></td>
-                                                <td>
+                                                <!-- <td>
                                                     <?php if ($service['image'] != '') { ?>
                                                     <img src="<?php echo $this->Url->build('/'.$service['image']); ?>" class="status-image" />
                                                     <?php } else { ?>
                                                     <img src="<?php echo $this->Url->build('/service_image/no-image.png'); ?>"  class="status-image">
                                                     <?php } ?>
-                                                </td>
+                                                </td> -->
 												<td><?php echo $service['title']; ?></td>
-												<td><?php echo $service['content']; ?></td>
-												<td>₵<?php echo $service['price']; ?></td>
+												<!-- <td><?php echo $service['content']; ?></td>
+												<td>₦ <?php echo $service['price']; ?></td> -->
+                                                <td><?php echo $service['unit']; ?></td>
+                                                <td><?php echo implode(", ",$cities[$key]); ?></td>
 												<td>
                                                     <?php if($service['isActive']==1) { ?>
 													<img src="<?php echo $this->Url->build('/img/success.png'); ?>" class="status-image" />
